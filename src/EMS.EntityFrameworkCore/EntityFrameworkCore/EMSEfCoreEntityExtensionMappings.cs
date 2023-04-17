@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EMS.Users;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Threading;
@@ -16,7 +17,35 @@ public static class EMSEfCoreEntityExtensionMappings
 
         OneTimeRunner.Run(() =>
         {
-                /* You can configure extra properties for the
+            ObjectExtensionManager.Instance
+                   .MapEfCoreProperty<IdentityUser, double>(
+                       nameof(AppUser.amountOwed),
+                       (entityBuilder, propertyBuilder) =>
+                       {
+                           propertyBuilder.HasDefaultValue(0);
+                           //  propertyBuilder.HasMaxLength(UserConsts.MaxTitleLength);
+                       }
+                   ).MapEfCoreProperty<IdentityUser, double>(
+                       nameof(AppUser.amountOwes),
+                       (entityBuilder, propertyBuilder) =>
+                       {
+
+                           propertyBuilder.HasDefaultValue(UserConsts.MinamountValue);
+                       }
+                       ).MapEfCoreProperty<IdentityUser, double>(
+                       nameof(AppUser.totalAmount),
+                       (entityBuilder, propertyBuilder) =>
+                       {
+                           propertyBuilder.HasDefaultValue(0); // propertyBuilder.HasDefaultValue(UserConsts.MinReputationValue);
+                       }
+                       ).MapEfCoreProperty<IdentityUser, bool>(
+                       nameof(AppUser.isRegistered),
+                       (entityBuilder, propertyBuilder) =>
+                       {
+                           propertyBuilder.HasDefaultValue(UserConsts.DefaultisRegisteredValue);
+                       }
+                   );
+            /* You can configure extra properties for the
                  * entities defined in the modules used by your application.
                  *
                  * This class can be used to map these extra properties to table fields in the database.
