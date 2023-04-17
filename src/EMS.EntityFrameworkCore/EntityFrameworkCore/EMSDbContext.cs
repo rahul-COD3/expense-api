@@ -125,7 +125,18 @@ public class EMSDbContext :
         {
             b.ToTable(EMSConsts.DbTablePrefix + "Friends", EMSConsts.DbSchema);
             b.ConfigureByConvention();
-           // b.Property(b => b.IsDeleted).IsRequired();
+            b.Property(b => b.UserId).IsRequired();
+            b.Property(b => b.FriendId).IsRequired();
+            b.HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+            b.HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(f => f.FriendId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
         });
 
         builder.Entity<Payment>(b =>
