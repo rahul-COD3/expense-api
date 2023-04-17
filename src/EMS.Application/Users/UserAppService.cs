@@ -13,7 +13,6 @@ using Volo.Abp.Emailing.Templates;
 using Volo.Abp.TextTemplating;
 using System.Net.Mail;
 
-
 namespace EMS.Users
 {
     public interface IUserAppService
