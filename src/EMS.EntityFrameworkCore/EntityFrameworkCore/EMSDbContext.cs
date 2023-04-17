@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EMS.Friends;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -51,6 +53,7 @@ public class EMSDbContext :
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
     #endregion
+    public DbSet<Friend> Friends { get; set; }
 
     public EMSDbContext(DbContextOptions<EMSDbContext> options)
         : base(options)
@@ -81,5 +84,11 @@ public class EMSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        builder.Entity<Friend>(b =>
+        {
+            b.ToTable(EMSConsts.DbTablePrefix + "Friends", EMSConsts.DbSchema);
+            b.ConfigureByConvention();
+           // b.Property(b => b.IsDeleted).IsRequired();
+        });
     }
 }
