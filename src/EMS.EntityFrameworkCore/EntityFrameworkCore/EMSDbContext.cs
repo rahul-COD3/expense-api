@@ -3,6 +3,7 @@ using EMS.Friends;
 using EMS.GroupMembers;
 using EMS.Groups;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -146,5 +147,9 @@ public class EMSDbContext :
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Amount).IsRequired().HasMaxLength(128);
         });
+
+        
+            
+            
     }
 }

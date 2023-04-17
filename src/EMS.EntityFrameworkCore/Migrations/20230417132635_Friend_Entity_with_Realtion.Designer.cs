@@ -3,6 +3,7 @@ using System;
 using EMS.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace EMS.Migrations
 {
     [DbContext(typeof(EMSDbContext))]
-    partial class EMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230417132635_Friend_Entity_with_Realtion")]
+    partial class FriendEntitywithRealtion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,82 +26,6 @@ namespace EMS.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("EMS.Expenses.Expense", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("DeleterId");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("DeletionTime");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<string>("currency")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("expense_amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("expense_description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("expense_title")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<Guid>("group_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("paid_by")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("split_as")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AppExpenses", (string)null);
-                });
 
             modelBuilder.Entity("EMS.Friends.Friend", b =>
                 {
@@ -147,161 +74,6 @@ namespace EMS.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AppFriends", (string)null);
-                });
-
-            modelBuilder.Entity("EMS.GroupMembers.GroupMember", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<DateTime>("dateOfJoin")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("groupId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("isRemoved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<Guid>("userId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("groupId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("AppGroupMembers", (string)null);
-                });
-
-            modelBuilder.Entity("EMS.Groups.Group", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("About")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AppGroups", (string)null);
-                });
-
-            modelBuilder.Entity("EMS.Payments.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Amount")
-                        .HasMaxLength(128)
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid>("ExpenseId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<bool>("IsSettled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<Guid>("OwnedBy")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AppPayments", (string)null);
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -1942,21 +1714,6 @@ namespace EMS.Migrations
                     b.HasKey("TenantId", "Name");
 
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
-                });
-
-            modelBuilder.Entity("EMS.GroupMembers.GroupMember", b =>
-                {
-                    b.HasOne("EMS.Groups.Group", null)
-                        .WithMany()
-                        .HasForeignKey("groupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("EMS.Friends.Friend", b =>
