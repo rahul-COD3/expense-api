@@ -19,7 +19,7 @@ namespace EMS.GroupMembers
         {
         }
 
-        internal GroupMember(Guid id, [NotNull] Guid userId, [NotNull] Guid groupId, [NotNull] bool isRemoved, [NotNull] DateTime dateOfJoin)
+        internal GroupMember(Guid id, [NotNull] Guid userId, [NotNull] Guid groupId, [NotNull] bool isRemoved, [NotNull] DateTime dateOfJoin) : base(id)
         {
             this.userId = userId;
             this.groupId = groupId;
