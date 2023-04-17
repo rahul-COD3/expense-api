@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EMS.GroupMembers;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -52,6 +54,8 @@ public class EMSDbContext :
 
     #endregion
 
+    public DbSet<GroupMember> GroupMembers { get; set; }
+
     public EMSDbContext(DbContextOptions<EMSDbContext> options)
         : base(options)
     {
@@ -81,5 +85,19 @@ public class EMSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        builder.Entity<GroupMember>(b =>
+        {
+            b.ToTable(EMSConsts.DbTablePrefix + "GroupMembers",
+                EMSConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.groupId).IsRequired();
+            b.Property(x => x.isRemoved).HasDefaultValue(false);
+            b.HasOne<IdentityUser>()
+               .WithMany()
+               .HasForeignKey(gm => gm.userId)
+               .OnDelete(DeleteBehavior.Cascade)
+               .IsRequired();
+        });
+
     }
 }
