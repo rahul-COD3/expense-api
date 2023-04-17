@@ -23,14 +23,10 @@ namespace EMS.Users
     public class UserAppService : ApplicationService, IUserAppService, ITransientDependency
     {
         private readonly IIdentityUserRepository _userRepository;
-        private readonly IEmailSender _emailSender;
-        private readonly ITemplateRenderer _templateRenderer;
 
-        public UserAppService(IIdentityUserRepository userRepository, IEmailSender emailSender, ITemplateRenderer templateRenderer)
+        public UserAppService(IIdentityUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _emailSender = emailSender;
-            _templateRenderer = templateRenderer;
         }
 
         public async Task<bool> CheckEmailExists(string email)
