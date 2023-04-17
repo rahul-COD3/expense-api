@@ -8,7 +8,7 @@ public class UpdateGroupMemberDto
     [Required]
     public Guid userId { get; set; }
     [Required]
-    public int groupId { get; set; }
+    public Guid groupId { get; set; }
 
     [Required]
     public bool isRemoved { get; set; } = false;

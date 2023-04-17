@@ -13,10 +13,10 @@ namespace EMS.GroupMembers
 
         Task<PagedResultDto<GroupMemberDto>> GetListAsync(GetGroupMemberListDto input);
 
-        //Task<GroupMemberDto> CreateAsync(CreateGroupMemberDto input);
+        Task<GroupMemberDto> CreateAsync(CreateGroupMemberDto input);
 
-        //Task UpdateAsync(int id, UpdateGroupMemberDto input);
+        Task UpdateAsync(Guid id, UpdateGroupMemberDto input);
 
-        //Task DeleteAsync(int id);
+        Task DeleteAsync(Guid id);
     }
 }

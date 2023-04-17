@@ -8,7 +8,7 @@ namespace EMS.GroupMembers;
 public class GroupMemberDto : AuditedAggregateRoot<Guid>
 {
     public Guid userId { get; set; }
-    public int groupId { get; set; }
+    public Guid groupId { get; set; }
 
     public bool isRemoved { get; set; }
 
