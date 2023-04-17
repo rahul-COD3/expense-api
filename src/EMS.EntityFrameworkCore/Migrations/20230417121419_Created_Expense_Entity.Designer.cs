@@ -3,6 +3,7 @@ using System;
 using EMS.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace EMS.Migrations
 {
     [DbContext(typeof(EMSDbContext))]
-    partial class EMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230417121419_Created_Expense_Entity")]
+    partial class CreatedExpenseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,9 +100,8 @@ namespace EMS.Migrations
                     b.Property<Guid>("paid_by")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("split_as")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("split_as")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
