@@ -10,5 +10,7 @@ namespace EMS.Friends
     {
         Task CreateFriendAsync(CreateUpdateFriendDto input);
         Task DeleteFriendAsync(Guid id);
+
+        Task<List<FriendDto>> GetAllFriendsAsync();
     }
 }
