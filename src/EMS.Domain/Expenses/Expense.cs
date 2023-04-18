@@ -17,15 +17,13 @@ namespace EMS.Expenses
         public Guid paid_by { get; set; }
         public string expense_title { get; set; }
         public string expense_description { get; set; }
+        public decimal expense_amount { get; set; }
 
         public string split_as { get; set; }
 
         public string currency { get; set; }
             
-        public DateTime created_at { get; set; }
-        public DateTime modified_at { get; set; }
-        public DateTime deleted_at { get; set; }
-
+        
 
     }
 }
