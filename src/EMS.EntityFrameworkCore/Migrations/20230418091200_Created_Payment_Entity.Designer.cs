@@ -3,6 +3,7 @@ using System;
 using EMS.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace EMS.Migrations
 {
     [DbContext(typeof(EMSDbContext))]
-    partial class EMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230418091200_Created_Payment_Entity")]
+    partial class CreatedPaymentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,15 +72,15 @@ namespace EMS.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("currency")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("expense_amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("expense_amount")
-                        .HasColumnType("numeric");
+                    b.Property<DateTime>("deleted_at")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("expense_description")
                         .IsRequired()
@@ -90,6 +93,9 @@ namespace EMS.Migrations
 
                     b.Property<Guid>("group_id")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("modified_at")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("paid_by")
                         .HasColumnType("uuid");
