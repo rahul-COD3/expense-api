@@ -2,15 +2,12 @@ using EMS.Expenses;
 using EMS.Friends;
 using EMS.GroupMembers;
 using EMS.Groups;
-﻿using EMS.Friends;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
-using Volo.Abp.EntityFrameworkCore.Modeling;
-using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
@@ -90,18 +87,11 @@ public class EMSDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(EMSConsts.DbTablePrefix + "YourEntities", EMSConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
-
         builder.Entity<Expense>(b =>
         {
             b.ToTable(EMSConsts.DbTablePrefix + "Expenses",
                EMSConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
+            b.ConfigureByConvention(); 
             b.Property(x => x.expense_title).IsRequired().HasMaxLength(128);
         });
 
@@ -109,20 +99,23 @@ public class EMSDbContext :
         {
             b.ToTable(EMSConsts.DbTablePrefix + "GroupMembers",
                 EMSConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
+            b.ConfigureByConvention(); 
             b.Property(x => x.groupId).IsRequired();
             b.Property(x => x.isRemoved).HasDefaultValue(false);
             b.HasOne<IdentityUser>()
                .WithMany()
                .HasForeignKey(gm => gm.userId)
-               .OnDelete(DeleteBehavior.Cascade)
                .IsRequired();
+            b.HasOne<Group>()
+            .WithMany()
+            .HasForeignKey(g => g.groupId)
+            .IsRequired();
         });
         builder.Entity<Group>(b =>
         {
             b.ToTable(EMSConsts.DbTablePrefix + "Groups",
                                EMSConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
+            b.ConfigureByConvention();
             b.Property(x => x.Name).IsRequired();
             b.Property(x => x.About).IsRequired();
             b.Property(x => x.IsDeleted).HasDefaultValue(false);

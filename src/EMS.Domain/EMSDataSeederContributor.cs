@@ -1,24 +1,25 @@
-﻿using EMS.Expenses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp.Data;
-using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Repositories;
+﻿//using AutoFixture;
+//using EMS.Expenses;
+//using EMS.Groups;
+//using Microsoft.VisualBasic;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using Volo.Abp.Data;
+//using Volo.Abp.DependencyInjection;
+//using Volo.Abp.Domain.Repositories;
+//using Volo.Abp.Guids;
 
-namespace EMS
-{
-    public class EMSDataSeederContributor
-    : IDataSeedContributor, ITransientDependency
-    {
-        private readonly IRepository<Expense, Guid> _expenseRepository;
-
-        public EMSDataSeederContributor(IRepository<Expense, Guid> expenseRepository)
-        {
-            _expenseRepository = expenseRepository;
-        }
+//namespace EMS
+//{
+//    public class EMSDataSeederContributor
+//    : IDataSeedContributor, ITransientDependency
+//    {
+//        private readonly IRepository<Group, Guid> _groupRepository;
+//        private readonly GroupManager _groupManager;
+       
 
         public async Task SeedAsync(DataSeedContext context)
         {

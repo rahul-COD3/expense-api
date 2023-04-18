@@ -2,6 +2,7 @@
 using EMS.Expenses;
 using EMS.GroupMembers;
 using EMS.Payments;
+using EMS.Groups;
 
 namespace EMS;
 
@@ -18,5 +19,6 @@ public class EMSApplicationAutoMapperProfile : Profile
         CreateMap<GroupMember, GroupMemberDto>();
         CreateMap<Payment, PaymentDto>();
 
+        CreateMap<Group, GroupDto>();
     }
 }
