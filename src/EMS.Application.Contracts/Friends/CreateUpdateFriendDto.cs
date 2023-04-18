@@ -12,5 +12,7 @@ namespace EMS.Friends
         [Required]
         public Guid FriendId { get; set; }
         public bool IsDeleted { get; set; }
+        
+        
     }
 }

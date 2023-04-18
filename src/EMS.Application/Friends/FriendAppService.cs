@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 
 namespace EMS.Friends
 {
@@ -26,16 +27,35 @@ namespace EMS.Friends
                 throw new BusinessException("A user cannot add themselves as a friend.");
             }
 
-            // Create new friend entity
-            var friend = new Friend
+            else
             {
-                UserId = input.UserId,
-                FriendId = input.FriendId,
-                IsDeleted = input.IsDeleted
-            };
+                //check if the user exists in User table or not
 
-            // Save to repository
-            await _friendRepository.InsertAsync(friend);
+                // Create new friend entity
+                var friend = new Friend
+                {
+                    UserId = input.UserId,
+                    FriendId = input.FriendId,
+                    IsDeleted = input.IsDeleted
+                };
+
+                //false
+                // Create a friend when the friend (or User) is not regiostered in splitwise
+                //Invite the friend using invite API service and get user id of newly registered user where his idRegistered is set to false
+                //this will not be present in here, need a trigger that will do this// when user accepts invitation , need to set its isRegistered to true and make an entry of its user id to friends table
+
+                //true
+                // Create a friend when the friend (or User ) is registered in Splitwise
+                // enter the user id of that friend in friend id in friends table , and the user id of one who is adding the friend would be entered in user id of friend table
+
+
+
+
+
+                // Save to repository
+                await _friendRepository.InsertAsync(friend);
+
+            }
         }
         public async Task<List<FriendDto>> GetAllFriendsAsync()
         {
