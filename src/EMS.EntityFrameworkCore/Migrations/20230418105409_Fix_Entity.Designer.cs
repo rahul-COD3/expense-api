@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace EMS.Migrations
 {
     [DbContext(typeof(EMSDbContext))]
-    [Migration("20230418092405_Created_expense11_Entity")]
-    partial class Createdexpense11Entity
+    [Migration("20230418105409_Fix_Entity")]
+    partial class FixEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,15 +72,9 @@ namespace EMS.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<DateTime>("created_at")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<string>("currency")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("deleted_at")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("expense_amount")
                         .HasColumnType("numeric");
@@ -96,9 +90,6 @@ namespace EMS.Migrations
 
                     b.Property<Guid>("group_id")
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime>("modified_at")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("paid_by")
                         .HasColumnType("uuid");

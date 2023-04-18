@@ -76,9 +76,6 @@ namespace EMS.Migrations
                     b.Property<decimal>("expense_amount")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("expense_amount")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("expense_description")
                         .IsRequired()
                         .HasColumnType("text");
