@@ -71,7 +71,7 @@ namespace EMS.Expenses
                 return this;
         }
 
-        private void SetTitle([NotNull] string title)
+        private void SetTitle([NotNull] string expense_title)
         {
             expense_title = Check.NotNullOrWhiteSpace(
                 expense_title,

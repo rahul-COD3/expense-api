@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Volo.Abp.Application.Dtos;
 
 namespace EMS.Expenses
 {
-    public class ExpenseDto : AuditedEntityDto<Guid>
+    public class CreateExpenseDto
     {
+        public Guid Id { get; set; }
         public Guid group_id { get; set; }
 
         public Guid paid_by { get; set; }
@@ -16,8 +14,10 @@ namespace EMS.Expenses
 
         public string split_as { get; set; }
 
-        public string currency { get; set; }
-
-       
+        public string currency
+        {
+            get; set;
+        }
     }
+
 }
