@@ -17,7 +17,7 @@ namespace EMS.Friends
         }
 
         // Implement any additional methods you need here
-        
+
         // Example method to get a friend by UserId and FriendId
         public async Task<Friend> GetByUserIdAndFriendIdAsync(Guid userId, Guid friendId)
         {
