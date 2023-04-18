@@ -10,7 +10,7 @@ namespace EMS.Friends
     public interface IFriendRepository : IRepository<Friend, Guid>
     {
         Task<Friend> GetByUserIdAndFriendIdAsync(Guid userId, Guid friendId);
-       
+
 
 
         // Add any additional repository methods here
