@@ -30,10 +30,12 @@ namespace EMS
                         expense_title = "ABC",
                         expense_description = "XYZ",
                         split_as = "PQR",
-                        currency = "Rupees"
+                        currency = "Rupees",
+                        expense_amount = 2000,
+
                     },
                     autoSave: true
-                );
+                ); ;
 
                 await _expenseRepository.InsertAsync(
                     new Expense
@@ -41,7 +43,9 @@ namespace EMS
                         expense_title = "ABCQPR",
                         expense_description = "XYZPQR",
                         split_as = "PQRPQR",
-                        currency = "RupeesPQR"
+                        currency = "RupeesPQR",
+                        expense_amount = 2000,
+
                     },
                     autoSave: true
                 );
