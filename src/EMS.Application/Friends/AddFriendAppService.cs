@@ -27,7 +27,7 @@ namespace EMS.Friends
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<Friend, Guid> _friendRepository;
-
+        
         public AddFriendAppService(UserManager<IdentityUser> userManager, IGuidGenerator guidGenerator, ICurrentUser currentUser, IRepository<Friend, Guid> friendRepository)
         {
             _userManager = userManager;
@@ -40,7 +40,7 @@ namespace EMS.Friends
         {
             var existingUser = await _userManager.FindByEmailAsync(emailId);
             if (!Regex.IsMatch(emailId, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            {
+        {
                 throw new BusinessException("Invalid email format");
             }
             if (existingUser != null)
@@ -84,10 +84,10 @@ namespace EMS.Friends
                         IsDeleted = false
                     };
                     await _friendRepository.InsertAsync(friend);
-                  
+
                     return "Friend invited";
-                }
-                
+            }
+
                 throw new ApplicationException($"Could not add user: {resultUser.Errors.FirstOrDefault()?.Description}");
             }
         }
