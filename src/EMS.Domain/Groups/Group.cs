@@ -1,9 +1,5 @@
 ﻿using JetBrains.Annotations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -11,7 +7,7 @@ namespace EMS.Groups
 {
     public class Group :  AuditedAggregateRoot<Guid>
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
         public string About { get; set; }
         public Guid CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
@@ -19,12 +15,12 @@ namespace EMS.Groups
         {
         }
 
-        internal Group(Guid id, [NotNull] string name, [NotNull] string about, [NotNull] Guid createdBy, [NotNull] bool isDeleted) : base(id)
+        internal Group(Guid id, [NotNull] string name, [NotNull] string about, [NotNull] Guid createdBy, [NotNull] bool isDeleted = false) : base(id)
         {
-            this.Name = name;
-            this.About = about;
-            this.CreatedBy = createdBy;
-            this.IsDeleted = isDeleted;
+            SetName(name);
+            About = about;
+            CreatedBy = createdBy;
+            IsDeleted = isDeleted;
         }
         internal Group ChangeName([NotNull] string name)
         {
