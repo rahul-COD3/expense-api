@@ -2,5 +2,11 @@
 
 public static class EMSDomainErrorCodes
 {
-    /* You can add your business exception error codes here, as constants */
+
+
+ 
+        public const string ExpenseAlreadyExists = "EMS:00001";
+    
 }
+/* You can add your business exception error codes here, as constants */
+
