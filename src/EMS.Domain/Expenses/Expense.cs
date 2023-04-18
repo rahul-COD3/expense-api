@@ -16,6 +16,7 @@ namespace EMS.Expenses
 
         public Guid paid_by { get; set; }
         public string expense_title { get; set; }
+        public decimal expense_amount { get; set; }
         public string expense_description { get; set; }
 
         public string split_as { get; set; }

@@ -20,6 +20,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using EMS.Payments;
 
 namespace EMS.EntityFrameworkCore;
 
@@ -64,6 +65,7 @@ public class EMSDbContext :
 
     public DbSet<GroupMember> GroupMembers { get; set; }
     public DbSet<Group> Groups { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     public EMSDbContext(DbContextOptions<EMSDbContext> options)
         : base(options)
@@ -131,6 +133,14 @@ public class EMSDbContext :
             b.ToTable(EMSConsts.DbTablePrefix + "Friends", EMSConsts.DbSchema);
             b.ConfigureByConvention();
            // b.Property(b => b.IsDeleted).IsRequired();
+        });
+
+        builder.Entity<Payment>(b =>
+        {
+            b.ToTable(EMSConsts.DbTablePrefix + "Payments",
+                EMSConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Amount).IsRequired().HasMaxLength(128);
         });
     }
 }
