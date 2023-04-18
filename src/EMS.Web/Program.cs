@@ -1,56 +1,75 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
-namespace EMS.Web;
-
-public class Program
+namespace EMS.Web
 {
-    public async static Task<int> Main(string[] args)
+    public class Program
     {
-        Log.Logger = new LoggerConfiguration()
+        public async static Task<int> Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
 #if DEBUG
-            .MinimumLevel.Debug()
+                .MinimumLevel.Debug()
 #else
-            .MinimumLevel.Information()
+                .MinimumLevel.Information()
 #endif
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-            .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
-            .WriteTo.Async(c => c.Console())
-            .CreateLogger();
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.File("Logs/logs.txt"))
+                .WriteTo.Async(c => c.Console())
+                .CreateLogger();
 
-        try
-        {
-            Log.Information("Starting web host.");
-            var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
-                .UseAutofac()
-                .UseSerilog();
-            await builder.AddApplicationAsync<EMSWebModule>();
-            var app = builder.Build();
-            await app.InitializeApplicationAsync();
-            await app.RunAsync();
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            if (ex is HostAbortedException)
+            try
             {
-                throw;
-            }
+                Log.Information("Starting web host.");
+                var builder = WebApplication.CreateBuilder(args);
+                builder.Host.AddAppSettingsSecretsJson()
+                    .UseAutofac()
+                    .UseSerilog();
 
-            Log.Fatal(ex, "Host terminated unexpectedly!");
-            return 1;
-        }
-        finally
-        {
-            Log.CloseAndFlush();
+                // Add CORS policies
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("AllowAll", policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+                });
+
+                await builder.AddApplicationAsync<EMSWebModule>();
+                var app = builder.Build();
+
+                // Use CORS policies
+                app.UseCors("AllowAll");
+
+                await app.InitializeApplicationAsync();
+                await app.RunAsync();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                if (ex is HostAbortedException)
+                {
+                    throw;
+                }
+
+                Log.Fatal(ex, "Host terminated unexpectedly!");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }
