@@ -1,11 +1,14 @@
-﻿using EMS.GroupMembers;
+using EMS.Friends;
+using EMS.GroupMembers;
 using EMS.Groups;
+﻿using EMS.Friends;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
@@ -54,6 +57,7 @@ public class EMSDbContext :
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
     #endregion
+    public DbSet<Friend> Friends { get; set; }
 
     public DbSet<GroupMember> GroupMembers { get; set; }
     public DbSet<Group> Groups { get; set; }
@@ -87,6 +91,7 @@ public class EMSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
         builder.Entity<GroupMember>(b =>
         {
             b.ToTable(EMSConsts.DbTablePrefix + "GroupMembers",
@@ -110,5 +115,11 @@ public class EMSDbContext :
             b.Property(x => x.IsDeleted).HasDefaultValue(false);
         });
 
+        builder.Entity<Friend>(b =>
+        {
+            b.ToTable(EMSConsts.DbTablePrefix + "Friends", EMSConsts.DbSchema);
+            b.ConfigureByConvention();
+           // b.Property(b => b.IsDeleted).IsRequired();
+        });
     }
 }
