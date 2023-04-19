@@ -32,17 +32,17 @@ namespace EMS.Friends
             {
                 //check if the user exists in User table or not
 
-            // Create new friend entity
+                // Create new friend entity
 
-            var friend = new Friend
-            {
+                var friend = new Friend
+                {
                     UserId = (Guid)input.UserId,
-                FriendId = input.FriendId,
-                IsDeleted = input.IsDeleted
-            };
+                    FriendId = input.FriendId,
+                    IsDeleted = input.IsDeleted
+                };
 
 
-            await _friendRepository.InsertAsync(friend);
+                await _friendRepository.InsertAsync(friend);
 
             }
         }
