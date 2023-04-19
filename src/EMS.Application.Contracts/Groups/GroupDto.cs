@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EMS.GroupMembers;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Application.Dtos;
 
@@ -13,5 +15,7 @@ namespace EMS.Groups
         public Guid CreatedBy { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public List<GroupMemberDto>? GroupMembers { get; set; }
     }
 }

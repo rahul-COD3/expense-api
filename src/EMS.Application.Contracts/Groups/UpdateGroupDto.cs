@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System;
+using EMS.GroupMembers;
+using System.Collections.Generic;
 
 namespace EMS.Groups
 {
@@ -12,5 +14,6 @@ namespace EMS.Groups
         [Required]
         public Guid CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
+        public List<GroupMemberDto>? GroupMembers { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace EMS.Groups;
 
 public interface IGroupRepository : IRepository<Group, Guid>
 {
+    Task<List<Group>> FindGroupsByUserIdAsync(Guid userId);
     Task<Group> FindByNameAsync(string name);
     Task<List<Group>> GetListAsync(
         int skipCount,

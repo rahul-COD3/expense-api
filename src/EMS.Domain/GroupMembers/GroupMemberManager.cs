@@ -27,4 +27,19 @@ public class GroupMemberManager : DomainService
                 dateOfJoin: dateOfJoin
             );
     }
+    public async Task<List<GroupMember>> CreateListAsync(List<GroupMember> input)
+    {
+        var output = new List<GroupMember>();
+        foreach (var groupMember in input)
+        {
+            var newGroupMember = await CreateAsync(
+                userId: groupMember.userId,
+                groupId: groupMember.groupId,
+                isRemoved: groupMember.isRemoved,
+                dateOfJoin: groupMember.dateOfJoin
+            );
+            output.Add(newGroupMember);
+        }
+        return output;
+    }
 }
