@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Identity;
@@ -35,14 +36,25 @@ namespace EMS.Friends
             _friendRepository = friendRepository;
         }
 
-        public async Task AddFriendAsync(string name, string emailId)
+        public async Task<String> AddFriendAsync(string name, string emailId)
         {
             var existingUser = await _userManager.FindByEmailAsync(emailId);
+            if (!Regex.IsMatch(emailId, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                throw new BusinessException("Invalid email format");
+            }
             if (existingUser != null)
             {
                 //check if friendship of existingUser and current user exist
 
                 // throw new BusinessException("User already exists");
+                var existingFriendship = await _friendRepository.FirstOrDefaultAsync(f =>
+                f.UserId == _currentUser.Id && f.FriendId == existingUser.Id && !f.IsDeleted);
+
+                if (existingFriendship != null)
+                {
+                    return "Friend exist";
+                }
 
                 var friend = new Friend
                 {
@@ -50,9 +62,11 @@ namespace EMS.Friends
                     FriendId = existingUser.Id,
                     IsDeleted = false
                 };
-                
+
                 await _friendRepository.InsertAsync(friend);
-                return;
+
+
+                return "Friend added";
             }
             else
             {
@@ -70,9 +84,10 @@ namespace EMS.Friends
                         IsDeleted = false
                     };
                     await _friendRepository.InsertAsync(friend);
-                    return;
+                  
+                    return "Friend invited";
                 }
-
+                
                 throw new ApplicationException($"Could not add user: {resultUser.Errors.FirstOrDefault()?.Description}");
             }
         }

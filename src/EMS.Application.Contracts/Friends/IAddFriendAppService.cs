@@ -8,6 +8,6 @@ namespace EMS.Friends
 {
     public interface IAddFriendAppService : IApplicationService
     {
-        Task AddFriendAsync(string name, string email);
+        Task<string> AddFriendAsync(string name, string email);
     }
 }
