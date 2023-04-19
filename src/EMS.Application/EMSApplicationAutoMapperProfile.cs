@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+
+using AutoMapper;
 using EMS.Expenses;
 using EMS.GroupMembers;
 using EMS.Payments;
@@ -26,6 +27,5 @@ public class EMSApplicationAutoMapperProfile : Profile
         CreateMap<Group, GroupDto>();
         CreateMap<Friend, FriendDto>();
         CreateMap<CreateUpdateFriendDto,Friend>();
-        CreateMap<CreateUpdatePaymentDto, Payment>();
     }
 }
