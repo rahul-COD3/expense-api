@@ -13,7 +13,7 @@ namespace EMS.Groups
         public bool IsDeleted { get; set; }
         private Group()
         {
-            // this is private
+//             this is a private constructor
         }
 
         internal Group(Guid id, [NotNull] string name, [NotNull] string about, [NotNull] Guid createdBy, [NotNull] bool isDeleted = false) : base(id)
