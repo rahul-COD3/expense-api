@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace EMS.GroupMembers
 {
+    [Authorize]
     public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
     {
         private readonly IGroupMemberRepository _groupMemberRepository;
