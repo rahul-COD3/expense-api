@@ -19,7 +19,6 @@ public class EMSApplicationAutoMapperProfile : Profile
         CreateMap<Expense, ExpenseDto>();
         CreateMap<CreateUpdateExpenseDto, Expense>();
         CreateMap<GroupMember, GroupMemberDto>();
-        CreateMap<List<GroupMember>, List<GroupMemberDto>>();
         
         CreateMap<Payment, PaymentDto>();
 
