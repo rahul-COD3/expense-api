@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
-namespace EMS.Web;
-
-public class Program
+namespace EMS.Web
 {
-    public async static Task<int> Main(string[] args)
+    public class Program
     {
-        Log.Logger = new LoggerConfiguration()
+        public async static Task<int> Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
 #if DEBUG
-            .MinimumLevel.Debug()
+                .MinimumLevel.Debug()
 #else
-            .MinimumLevel.Information()
+                .MinimumLevel.Information()
 #endif
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-            .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
-            .WriteTo.Async(c => c.Console())
-            .CreateLogger();
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.File("Logs/logs.txt"))
+                .WriteTo.Async(c => c.Console())
+                .CreateLogger();
 
         try
         {
@@ -69,12 +71,13 @@ public class Program
                 throw;
             }
 
-            Log.Fatal(ex, "Host terminated unexpectedly!");
-            return 1;
-        }
-        finally
-        {
-            Log.CloseAndFlush();
+                Log.Fatal(ex, "Host terminated unexpectedly!");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

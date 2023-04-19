@@ -14,7 +14,6 @@ using Volo.Abp.PermissionManagement.Identity;
 using Volo.Abp.PermissionManagement.OpenIddict;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
-
 namespace EMS;
 
 [DependsOn(
@@ -29,6 +28,7 @@ namespace EMS;
     typeof(AbpSettingManagementDomainModule),
     typeof(AbpTenantManagementDomainModule),
     typeof(AbpEmailingModule)
+   // typeof(AbpEntityFrameworkCoreModule)
 )]
 public class EMSDomainModule : AbpModule
 {
@@ -60,6 +60,8 @@ public class EMSDomainModule : AbpModule
         {
             options.IsEnabled = MultiTenancyConsts.IsEnabled;
         });
+       
+
 
 #if DEBUG
         context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
