@@ -13,6 +13,7 @@ namespace EMS.Groups
         public bool IsDeleted { get; set; }
         private Group()
         {
+//             this is a private constructor
             // this is private
         }
 
