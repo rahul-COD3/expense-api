@@ -14,7 +14,6 @@ using Volo.Abp.PermissionManagement.Identity;
 using Volo.Abp.PermissionManagement.OpenIddict;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
-using Abp.EntityFrameworkCore;
 namespace EMS;
 
 [DependsOn(
@@ -28,8 +27,8 @@ namespace EMS;
     typeof(AbpPermissionManagementDomainIdentityModule),
     typeof(AbpSettingManagementDomainModule),
     typeof(AbpTenantManagementDomainModule),
-    typeof(AbpEmailingModule),
-    typeof(AbpEntityFrameworkCoreModule)
+    typeof(AbpEmailingModule)
+   // typeof(AbpEntityFrameworkCoreModule)
 )]
 public class EMSDomainModule : AbpModule
 {

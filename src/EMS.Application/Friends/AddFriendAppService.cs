@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Identity;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
 using Volo.Abp.Identity;
+using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
+using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 using static Volo.Abp.UI.Navigation.DefaultMenuNames.Application;
 
 namespace EMS.Friends
@@ -18,34 +24,57 @@ namespace EMS.Friends
     {
         private readonly IGuidGenerator _guidGenerator;
         private readonly UserManager<IdentityUser> _userManager;
-        
+        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<Friend, Guid> _friendRepository;
 
-        public AddFriendAppService(UserManager<IdentityUser> userManager, IGuidGenerator guidGenerator)
+        public AddFriendAppService(UserManager<IdentityUser> userManager, IGuidGenerator guidGenerator, ICurrentUser currentUser, IRepository<Friend, Guid> friendRepository)
         {
             _userManager = userManager;
             _guidGenerator = guidGenerator;
+            _currentUser = currentUser;
+            _friendRepository = friendRepository;
         }
 
-        public async Task AddFriendAsync(string name, string email)
+        public async Task AddFriendAsync(string name, string emailId)
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
+            var existingUser = await _userManager.FindByEmailAsync(emailId);
             if (existingUser != null)
             {
-                throw new BusinessException("User already exist");
+                //check if friendship of existingUser and current user exist
 
-            }
-            else
-            await SendEmailAsync(email);
-            var user = new IdentityUser(_guidGenerator.Create(), name, email);
+                // throw new BusinessException("User already exists");
 
-            var result = await _userManager.CreateAsync(user);
-
-            if (result.Succeeded)
-            {
+                var friend = new Friend
+                {
+                    UserId = (Guid)_currentUser.Id,
+                    FriendId = existingUser.Id,
+                    IsDeleted = false
+                };
+                
+                await _friendRepository.InsertAsync(friend);
                 return;
             }
+            else
+            {
+                await SendEmailAsync(emailId);
+                var user = new IdentityUser(_guidGenerator.Create(), name, emailId);
+                var resultUser = await _userManager.CreateAsync(user);
 
-            throw new ApplicationException($"Could not add user: {result.Errors.FirstOrDefault()?.Description}");
+                if (resultUser.Succeeded)
+                {
+                    //var currentUser = await _currentUser.Id();
+                    var friend = new Friend
+                    {
+                        UserId = (Guid)_currentUser.Id,
+                        FriendId = user.Id,
+                        IsDeleted = false
+                    };
+                    await _friendRepository.InsertAsync(friend);
+                    return;
+                }
+
+                throw new ApplicationException($"Could not add user: {resultUser.Errors.FirstOrDefault()?.Description}");
+            }
         }
 
         private async Task SendEmailAsync(string targetEmail)
