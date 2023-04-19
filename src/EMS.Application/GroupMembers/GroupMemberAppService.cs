@@ -26,6 +26,11 @@ namespace EMS.GroupMembers
             var groupMember = await _groupMemberRepository.GetAsync(id);
             return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
         }
+        public async Task<List<GroupMemberDto>> FindByGroupIdAsync(Guid groupId)
+        {
+            var groupMembers = await _groupMemberRepository.FindByGroupIdAsync(groupId);
+            return ObjectMapper.Map<List<GroupMember>, List<GroupMemberDto>>(groupMembers);
+        }
 
         public async Task<PagedResultDto<GroupMemberDto>> GetListAsync(GetGroupMemberListDto input)
         {
@@ -80,5 +85,6 @@ namespace EMS.GroupMembers
             groupMember.isRemoved = false;
             await _groupMemberRepository.UpdateAsync(groupMember);
         }
+        
     }
 }

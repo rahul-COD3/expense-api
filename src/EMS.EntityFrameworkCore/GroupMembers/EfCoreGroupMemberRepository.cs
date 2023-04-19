@@ -19,10 +19,10 @@ namespace EMS.GroupMembers
         }
 
 
-        public async Task<GroupMember> FindByGroupIdAsync(Guid groupId)
+        public async Task<List<GroupMember>> FindByGroupIdAsync(Guid groupId)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet.FirstOrDefaultAsync(groupMember => groupMember.groupId == groupId);
+            return await dbSet.Where(groupMember => groupMember.groupId == groupId).ToListAsync();
         }
 
         public async Task<List<GroupMember>> GetListAsync(int skipCount, int maxResultCount, string sorting, string filter = null)
@@ -34,6 +34,5 @@ namespace EMS.GroupMembers
                 .Take(maxResultCount)
                 .ToListAsync();
         }
-
     }
 }
