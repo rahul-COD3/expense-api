@@ -30,10 +30,34 @@ public class Program
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
-                .UseAutofac()
-                .UseSerilog();
+            .UseAutofac()
+            .UseSerilog();
+
+
+
+            // Add CORS policies
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+                });
+            });
+
+
+
             await builder.AddApplicationAsync<EMSWebModule>();
             var app = builder.Build();
+
+
+
+            // Use CORS policies
+            app.UseCors("AllowAll");
+
+
+
             await app.InitializeApplicationAsync();
             await app.RunAsync();
             return 0;
