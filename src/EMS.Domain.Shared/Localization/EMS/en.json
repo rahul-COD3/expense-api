@@ -3,6 +3,17 @@
   "texts": {
     "Menu:Home": "Home",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "Enum:CurrencyType:0": "INR",
+    "Enum:CurrencyType:1": "BHD",
+    "Enum:CurrencyType:2": "USD",
+    "Enum:CurrencyType:3": "EUR",
+    "Enum:CurrencyType:4": "BDT",
+
+
+    "Enum:SplitAsType:1": "Equal",
+    "Enum:SplitAsType:2": "Perpercentage"
+
   }
 }
+ 
