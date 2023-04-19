@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,12 +33,16 @@ namespace EMS.Friends
                 //check if the user exists in User table or not
 
                 // Create new friend entity
+                
                 var friend = new Friend
                 {
-                    UserId = input.UserId,
+                    UserId = (Guid)input.UserId,
                     FriendId = input.FriendId,
                     IsDeleted = input.IsDeleted
                 };
+
+                
+                await _friendRepository.InsertAsync(friend);
 
                 //false
                 // Create a friend when the friend (or User) is not regiostered in splitwise
@@ -48,12 +53,7 @@ namespace EMS.Friends
                 // Create a friend when the friend (or User ) is registered in Splitwise
                 // enter the user id of that friend in friend id in friends table , and the user id of one who is adding the friend would be entered in user id of friend table
 
-
-
-
-
                 // Save to repository
-                await _friendRepository.InsertAsync(friend);
 
             }
         }
