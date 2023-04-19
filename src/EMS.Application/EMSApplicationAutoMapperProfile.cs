@@ -21,9 +21,11 @@ public class EMSApplicationAutoMapperProfile : Profile
         CreateMap<GroupMember, GroupMemberDto>();
         
         CreateMap<Payment, PaymentDto>();
+        CreateMap<CreateUpdatePaymentDto, Payment>();
 
         CreateMap<Group, GroupDto>();
         CreateMap<Friend, FriendDto>();
         CreateMap<CreateUpdateFriendDto,Friend>();
+        CreateMap<CreateUpdatePaymentDto, Payment>();
     }
 }
