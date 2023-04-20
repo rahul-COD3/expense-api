@@ -15,8 +15,8 @@ namespace EMS.Groups
 
         Task<GroupDto> CreateAsync(CreateGroupDto input);
 
-        Task UpdateAsync(Guid id, UpdateGroupDto input);
+        Task<GroupDto> UpdateAsync(Guid id, UpdateGroupDto input);
 
-        Task DeleteAsync(Guid id);
+        Task<GroupDto> DeleteAsync(Guid id);
     }
 }
