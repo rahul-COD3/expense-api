@@ -54,7 +54,7 @@ namespace EMS.Payments
         [Authorize]
         public async Task<List<PaymentDto>> GetSettledPaymentsofCurrentUserAsync() // returns the list of payment for the current user
         {
-            
+           
 
             var payments = await Repository.GetListAsync(p => p.IsSettled);
             
