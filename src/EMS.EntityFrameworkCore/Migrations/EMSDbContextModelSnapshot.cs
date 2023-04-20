@@ -301,6 +301,10 @@ namespace EMS.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ExpenseId");
+
+                    b.HasIndex("OwnedBy");
+
                     b.ToTable("AppPayments", (string)null);
                 });
 
@@ -1944,6 +1948,21 @@ namespace EMS.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
+            modelBuilder.Entity("EMS.Friends.Friend", b =>
+                {
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EMS.GroupMembers.GroupMember", b =>
                 {
                     b.HasOne("EMS.Groups.Group", null)
@@ -1959,17 +1978,17 @@ namespace EMS.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EMS.Friends.Friend", b =>
+            modelBuilder.Entity("EMS.Payments.Payment", b =>
                 {
-                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                    b.HasOne("EMS.Expenses.Expense", null)
                         .WithMany()
-                        .HasForeignKey("FriendId")
+                        .HasForeignKey("ExpenseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("OwnedBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
