@@ -1,9 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using EMS.Groups;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.Guids;
 
@@ -19,6 +22,11 @@ public class GroupMemberManager : DomainService
     }
     public async Task<GroupMember> CreateAsync([NotNull] Guid userId, [NotNull] Guid groupId, [NotNull] bool isRemoved, [NotNull] DateTime dateOfJoin)
     {
+        var existingGroup = await _groupMemberRepository.FirstOrDefaultAsync(m => m.userId == userId && m.groupId == groupId);
+        if (existingGroup != null)
+        {
+            throw new MemberAlreadyExistsException(userId);
+        }
         return new GroupMember(
             GuidGenerator.Create(),
                 userId: userId,
