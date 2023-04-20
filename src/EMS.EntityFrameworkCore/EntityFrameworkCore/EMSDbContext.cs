@@ -95,11 +95,11 @@ public class EMSDbContext :
             b.Property(x => x.ExpenseTitle).IsRequired().HasMaxLength(128);
             b.HasOne<IdentityUser>()
              .WithMany()
-             .HasForeignKey(gm => gm.paidBy)
+             .HasForeignKey(x => x.PaidBy)
              .IsRequired();
             b.HasOne<Group>()
             .WithMany()
-            .HasForeignKey(g => g.groupId)
+            .HasForeignKey(x => x.GroupId)
             .IsRequired();
         });
 

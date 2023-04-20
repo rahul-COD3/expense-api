@@ -62,6 +62,9 @@ namespace EMS.Migrations
                         .HasColumnType("text")
                         .HasColumnName("ExtraProperties");
 
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsSettled")
                         .HasColumnType("boolean");
 
@@ -73,20 +76,17 @@ namespace EMS.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
+                    b.Property<Guid>("PaidBy")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("SplitType")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("groupId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("paidBy")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("groupId");
+                    b.HasIndex("GroupId");
 
-                    b.HasIndex("paidBy");
+                    b.HasIndex("PaidBy");
 
                     b.ToTable("AppExpenses", (string)null);
                 });
@@ -1939,13 +1939,13 @@ namespace EMS.Migrations
                 {
                     b.HasOne("EMS.Groups.Group", null)
                         .WithMany()
-                        .HasForeignKey("groupId")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
                         .WithMany()
-                        .HasForeignKey("paidBy")
+                        .HasForeignKey("PaidBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

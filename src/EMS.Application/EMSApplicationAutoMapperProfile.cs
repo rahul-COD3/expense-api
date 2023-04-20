@@ -17,7 +17,7 @@ public class EMSApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
 
         CreateMap<Expense, ExpenseDto>();
-        CreateMap<CreateUpdateExpenseDto, Expense>();
+
         CreateMap<GroupMember, GroupMemberDto>();
         
         CreateMap<Payment, PaymentDto>();
