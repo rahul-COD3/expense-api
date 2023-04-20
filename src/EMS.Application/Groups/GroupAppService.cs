@@ -12,6 +12,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.ObjectMapping;
+using Volo.Abp.Users;
 
 namespace EMS.Groups;
 [Authorize]
@@ -21,13 +22,21 @@ public class GroupAppService : EMSAppService, IGroupAppService
     private readonly GroupManager _groupManager;
     private readonly IGroupMemberRepository _groupMemberRepository;
     private readonly GroupMemberManager _groupMemberManager;
+    private readonly ICurrentUser _currentUser;
 
-    public GroupAppService(IGroupRepository groupRepository, GroupManager groupManager, IGroupMemberRepository groupMemberRepository, GroupMemberManager groupMemberManager)  
+    public GroupAppService(
+        IGroupRepository groupRepository, 
+        GroupManager groupManager, 
+        IGroupMemberRepository groupMemberRepository, 
+        GroupMemberManager groupMemberManager,
+        ICurrentUser currentUser
+        )  
     {
         _groupRepository = groupRepository;
         _groupManager = groupManager;
         _groupMemberRepository = groupMemberRepository;
         _groupMemberManager = groupMemberManager;
+        _currentUser = currentUser;
     }
     // getting group by groupId
     public async Task<GroupDto> GetAsync(Guid id)
@@ -81,12 +90,20 @@ public class GroupAppService : EMSAppService, IGroupAppService
                 input.CreatedBy,
                 input.IsDeleted
             );
+        var currentMember =await _groupMemberManager.CreateAsync(
+                (Guid)_currentUser.Id,
+                group.Id,
+                false,
+                DateTime.Now
+            );
         await _groupRepository.InsertAsync( group );
+        await _groupMemberRepository.InsertAsync(currentMember);
         return ObjectMapper.Map<Group,GroupDto>(group);
     }
     // creating group with list of user whare user is optional
     public async Task<GroupDto> CreateListAsync(CreateGroupDto input)
     {
+        // Create the group with the given input parameters
         var group = await _groupManager.CreateAsync(
             input.Name,
             input.About,
@@ -94,6 +111,19 @@ public class GroupAppService : EMSAppService, IGroupAppService
             input.IsDeleted
         );
 
+        // Add the current user as a member of the group
+        var currentMember = await _groupMemberManager.CreateAsync(
+            (Guid)_currentUser.Id,
+            group.Id,
+            false,
+            DateTime.Now
+        );
+
+        // Add the newly created group to the database
+        await _groupRepository.InsertAsync(group);
+
+
+        // Add any additional group members provided in the input
         var groupMembers = input.GroupMembers.Select(groupMember =>
             _groupMemberManager.CreateAsync(
                 groupMember.userId,
@@ -103,17 +133,14 @@ public class GroupAppService : EMSAppService, IGroupAppService
             )
         ).ToList();
 
-        // returns an list of GroupMember objects 
+        // Wait for all the new group members to be created and add them to the group
         var newGroupMembers = await Task.WhenAll(groupMembers);
-
-        await _groupRepository.InsertAsync(group);
-
         await _groupMemberRepository.InsertManyAsync(newGroupMembers);
 
-       
-
+        // Map the group to a GroupDto object and return it
         return ObjectMapper.Map<Group, GroupDto>(group);
     }
+
 
 
     // updating the the group by perticular group id
