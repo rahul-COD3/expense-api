@@ -301,6 +301,10 @@ namespace EMS.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ExpenseId");
+
+                    b.HasIndex("OwnedBy");
+
                     b.ToTable("AppPayments", (string)null);
                 });
 
@@ -1973,6 +1977,36 @@ namespace EMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
+
+            modelBuilder.Entity("EMS.Payments.Payment", b =>
+                {
+                    b.HasOne("EMS.Expenses.Expense", null)
+                    b.HasOne("EMS.Expenses.Expense", null)
+                        .WithMany()
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+            modelBuilder.Entity("EMS.GroupMembers.GroupMember", b =>
+            {
+                b.HasOne("EMS.Groups.Group", null)
+                    .WithMany()
+                    .HasForeignKey("groupId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                    .WithMany()
+                    .HasForeignKey("userId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
                 {
