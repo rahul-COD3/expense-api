@@ -143,8 +143,18 @@ public class EMSDbContext :
         {
             b.ToTable(EMSConsts.DbTablePrefix + "Payments",
                 EMSConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
+            b.ConfigureByConvention(); 
             b.Property(x => x.Amount).IsRequired().HasMaxLength(128);
+            b.HasOne<IdentityUser>()
+               .WithMany()
+               .HasForeignKey(f => f.OwnedBy)
+               .OnDelete(DeleteBehavior.Cascade)
+               .IsRequired();
+            b.HasOne<Expense>()
+                .WithMany()
+                .HasForeignKey(f => f.ExpenseId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
         });
 
         
