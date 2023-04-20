@@ -11,6 +11,7 @@ namespace EMS.Groups
         public string About { get; set; }
         public Guid CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
+
         private Group()
         {
 //             this is a private constructor
