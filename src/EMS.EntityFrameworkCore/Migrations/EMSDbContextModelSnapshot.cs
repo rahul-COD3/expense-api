@@ -1981,7 +1981,6 @@ namespace EMS.Migrations
             modelBuilder.Entity("EMS.Payments.Payment", b =>
                 {
                     b.HasOne("EMS.Expenses.Expense", null)
-                    b.HasOne("EMS.Expenses.Expense", null)
                         .WithMany()
                         .HasForeignKey("ExpenseId")
                         .OnDelete(DeleteBehavior.Cascade)
