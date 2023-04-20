@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EMS.Groups;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Volo.Abp.Application.Dtos;
@@ -21,5 +22,6 @@ namespace EMS.Expenses
         public DateTime created_at { get; set; }
         public DateTime modified_at { get; set; }
         public DateTime deleted_at { get; set; }
+        public GroupDto? groupDto { get; set; }
     }
 }
