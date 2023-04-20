@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using Volo.Abp.Domain.Entities.Auditing;
+﻿using Abp.Domain.Entities.Auditing;
+using System;
+
 namespace EMS.GroupMembers;
 
 public class GroupMemberDto : AuditedAggregateRoot<Guid>

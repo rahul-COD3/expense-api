@@ -43,23 +43,27 @@ namespace EMS.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("CreatorId");
 
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("DeleterId");
+                    b.Property<int>("CurrencyType")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("DeletionTime");
+                    b.Property<decimal>("ExpenseAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ExpenseDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExpenseTitle")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("text")
                         .HasColumnName("ExtraProperties");
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
+                    b.Property<bool>("IsSettled")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("timestamp without time zone")
@@ -69,33 +73,20 @@ namespace EMS.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<string>("currency")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("SplitType")
+                        .HasColumnType("integer");
 
-                    b.Property<decimal>("expense_amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("expense_description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("expense_title")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<Guid>("group_id")
+                    b.Property<Guid>("groupId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("paid_by")
+                    b.Property<Guid>("paidBy")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("split_as")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("groupId");
+
+                    b.HasIndex("paidBy");
 
                     b.ToTable("AppExpenses", (string)null);
                 });
@@ -1944,7 +1935,7 @@ namespace EMS.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("EMS.GroupMembers.GroupMember", b =>
+            modelBuilder.Entity("EMS.Expenses.Expense", b =>
                 {
                     b.HasOne("EMS.Groups.Group", null)
                         .WithMany()
@@ -1954,7 +1945,7 @@ namespace EMS.Migrations
 
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("paidBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1970,6 +1961,21 @@ namespace EMS.Migrations
                     b.HasOne("Volo.Abp.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EMS.GroupMembers.GroupMember", b =>
+                {
+                    b.HasOne("EMS.Groups.Group", null)
+                        .WithMany()
+                        .HasForeignKey("groupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
