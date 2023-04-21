@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EMS.Expenses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace EMS.Payments
@@ -23,11 +25,15 @@ namespace EMS.Payments
         CreateUpdatePaymentDto>, 
     IPaymentAppService 
     {
-       
-        public PaymentAppService(IRepository<Payment, Guid> repository)
+        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<Expense, Guid> _expenseRepository;
+        private readonly IRepository<Payment, Guid> _paymentRepository;
+        public PaymentAppService(IRepository<Payment, Guid> repository, ICurrentUser currentUser, IRepository<Expense, Guid> expenseRepository, IRepository<Payment, Guid> paymentRepository)
             : base(repository)
         {
-            
+            _currentUser = currentUser;
+            _expenseRepository = expenseRepository;
+            _paymentRepository = paymentRepository;
         }
         //public override async Task<string> UpdateAsync(Guid id, CreateUpdatePaymentDto input)
         //{
@@ -54,9 +60,11 @@ namespace EMS.Payments
         [Authorize]
         public async Task<List<PaymentDto>> GetSettledPaymentsofCurrentUserAsync() // returns the list of payment for the current user
         {
-           
+            var check1 = await _paymentRepository.FirstOrDefaultAsync();
+            var check2 = await _expenseRepository.GetAsync(check1.ExpenseId);
 
-            var payments = await Repository.GetListAsync(p => p.IsSettled);
+
+            var payments = await Repository.GetListAsync(p => p.IsSettled && p.OwnedBy == CurrentUser.Id || check2.paid_by == CurrentUser.Id);
             
             if(payments.Count == 0)
             {
@@ -66,5 +74,6 @@ namespace EMS.Payments
             return ObjectMapper.Map<List<Payment>, List<PaymentDto>>(payments);
         }
 
+        
     }
 }
