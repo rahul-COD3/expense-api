@@ -42,11 +42,15 @@ public class GroupAppService : EMSAppService, IGroupAppService
     public async Task<GroupDto> GetAsync(Guid id)
     {
         var group = await _groupRepository.GetAsync(id);
-        return ObjectMapper.Map<Group, GroupDto>(group);
+        var groupMembers = await _groupMemberRepository.FindByGroupIdAsync(id);
+        var groupDto = ObjectMapper.Map<Group, GroupDto>(group);
+        groupDto.GroupMembers = ObjectMapper.Map<List<GroupMember>, List<GroupMemberDto>>(groupMembers);
+
+        return groupDto;
     }
 
     // getting list of group by userId
-    public async Task<List<GroupDto>> FindGroupByUserIdAsync(Guid userId)
+    public async Task<List<GroupDto>> GetGroupsBelongingToUserAsync(Guid userId)
     {
         var groups = await _groupRepository.FindGroupsByUserIdAsync(userId);
         return ObjectMapper.Map<List<Group>, List<GroupDto>>(groups);
@@ -76,32 +80,31 @@ public class GroupAppService : EMSAppService, IGroupAppService
             ObjectMapper.Map<List<Group>, List<GroupDto>>(groups)
         );
     }
-    public async Task<List<GroupDto>> GetListOfGroupsByUserIdAsync(Guid userId)
-    {
-        var allGroupsByUserId = await _groupRepository.FindGroupsByUserIdAsync(userId);
-        return ObjectMapper.Map<List<Group>, List<GroupDto>>(allGroupsByUserId);
-    }
     // creating the group without user
     public async Task<GroupDto> CreateAsync(CreateGroupDto input)
     {
         var group = await _groupManager.CreateAsync(
-                input.Name,
-                input.About,
-                input.CreatedBy,
-                input.IsDeleted
-            );
-        var currentMember =await _groupMemberManager.CreateAsync(
-                (Guid)_currentUser.Id,
-                group.Id,
-                false,
-                DateTime.Now
-            );
-        await _groupRepository.InsertAsync( group );
-        await _groupMemberRepository.InsertAsync(currentMember);
-        return ObjectMapper.Map<Group,GroupDto>(group);
+            input.Name,
+            input.About,
+            input.CreatedBy,
+            input.IsDeleted
+        );
+        var currentMember = await _groupMemberManager.CreateAsync(
+            (Guid)_currentUser.Id,
+            group.Id,
+            false,
+            DateTime.Now
+        );
+        await _groupRepository.InsertAsync(group);
+        var groupMember = await _groupMemberRepository.InsertAsync(currentMember);
+
+        var groupDto = ObjectMapper.Map<Group, GroupDto>(group);
+        groupDto.GroupMembers = new List<GroupMemberDto> { ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember) };
+        return groupDto;
     }
+
     // creating group with list of user whare user is optional
-    public async Task<GroupDto> CreateListAsync(CreateGroupDto input)
+    public async Task<GroupDto> CreateWithMembersAsync(CreateGroupDto input)
     {
         // Create the group with the given input parameters
         var group = await _groupManager.CreateAsync(
@@ -111,17 +114,8 @@ public class GroupAppService : EMSAppService, IGroupAppService
             input.IsDeleted
         );
 
-        // Add the current user as a member of the group
-        var currentMember = await _groupMemberManager.CreateAsync(
-            (Guid)_currentUser.Id,
-            group.Id,
-            false,
-            DateTime.Now
-        );
-
         // Add the newly created group to the database
         await _groupRepository.InsertAsync(group);
-
 
         // Add any additional group members provided in the input
         var groupMembers = input.GroupMembers.Select(groupMember =>
@@ -133,12 +127,13 @@ public class GroupAppService : EMSAppService, IGroupAppService
             )
         ).ToList();
 
-        // Wait for all the new group members to be created and add them to the group
         var newGroupMembers = await Task.WhenAll(groupMembers);
         await _groupMemberRepository.InsertManyAsync(newGroupMembers);
 
-        // Map the group to a GroupDto object and return it
-        return ObjectMapper.Map<Group, GroupDto>(group);
+        var groupDto = ObjectMapper.Map<Group, GroupDto>(group);
+        groupDto.GroupMembers = ObjectMapper.Map<List<GroupMember>, List<GroupMemberDto>>(newGroupMembers.ToList());
+
+        return groupDto;
     }
 
 
