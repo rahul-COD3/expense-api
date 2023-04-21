@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EMS.Expenses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,11 @@ namespace EMS.Payments
         CreateUpdatePaymentDto>, 
     IPaymentAppService 
     {
-       
-        public PaymentAppService(IRepository<Payment, Guid> repository)
+        private readonly ICurrentUser _currentUser;
+        public PaymentAppService(IRepository<Payment, Guid> repository, ICurrentUser currentUser)
             : base(repository)
         {
-            
+            _currentUser = currentUser;
         }
         //public override async Task<string> UpdateAsync(Guid id, CreateUpdatePaymentDto input)
         //{
@@ -54,9 +55,8 @@ namespace EMS.Payments
         [Authorize]
         public async Task<List<PaymentDto>> GetSettledPaymentsofCurrentUserAsync() // returns the list of payment for the current user
         {
-           
 
-            var payments = await Repository.GetListAsync(p => p.IsSettled);
+            var payments = await Repository.GetListAsync(p => p.IsSettled && p.OwnedBy == CurrentUser.Id);
             
             if(payments.Count == 0)
             {
