@@ -40,7 +40,8 @@ namespace EMS.Payments
 
             if (payment == null)
             {
-                return (0, "Not available in any payment");
+                paymentReturn.Message = "You owes no one";
+                return paymentReturn;
             }
             else
             {
