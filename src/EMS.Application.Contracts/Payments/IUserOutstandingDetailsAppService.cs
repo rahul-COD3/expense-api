@@ -9,6 +9,6 @@ namespace EMS.Payments
 {
     public interface IUserOutstandingDetailsAppService : IApplicationService
     {
-        Task<PaymentReturnDto> GetPaymentInfoForCurrentUserAsync();
+        Task<List<PaymentReturnDto>> GetPaymentInfoForCurrentUserAsync();
     }
 }
