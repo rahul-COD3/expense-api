@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EMS.GroupMembers;
 using Microsoft.AspNetCore.Authorization;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
@@ -25,12 +26,12 @@ public class GroupAppService : EMSAppService, IGroupAppService
     private readonly ICurrentUser _currentUser;
 
     public GroupAppService(
-        IGroupRepository groupRepository, 
-        GroupManager groupManager, 
-        IGroupMemberRepository groupMemberRepository, 
+        IGroupRepository groupRepository,
+        GroupManager groupManager,
+        IGroupMemberRepository groupMemberRepository,
         GroupMemberManager groupMemberManager,
         ICurrentUser currentUser
-        )  
+        )
     {
         _groupRepository = groupRepository;
         _groupManager = groupManager;
@@ -41,7 +42,11 @@ public class GroupAppService : EMSAppService, IGroupAppService
     // getting group by groupId
     public async Task<GroupDto> GetAsync(Guid id)
     {
-        var group = await _groupRepository.GetAsync(id);
+        var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
+        if (group == null)
+        {
+            throw new UserFriendlyException("Group is not found with this group id");
+        }
         var groupMembers = await _groupMemberRepository.FindByGroupIdAsync(id);
         var groupDto = ObjectMapper.Map<Group, GroupDto>(group);
         groupDto.GroupMembers = ObjectMapper.Map<List<GroupMember>, List<GroupMemberDto>>(groupMembers);
@@ -131,22 +136,30 @@ public class GroupAppService : EMSAppService, IGroupAppService
     // updating the the group by perticular group id
     public async Task<GroupDto> UpdateAsync(Guid id, UpdateGroupDto input)
     {
-        var group = await _groupRepository.GetAsync( id );
-        if (group.Name!=input.Name)
+        var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
+        if (group == null)
+        {
+            throw new UserFriendlyException("Group is not found with this group id");
+        }
+        if (group.Name != input.Name)
         {
             await _groupManager.ChangeNameAsync(group, input.Name);
         }
         group.About = input.About;
         group.CreatedBy = input.CreatedBy;
         group.IsDeleted = input.IsDeleted;
-        await _groupRepository.UpdateAsync( group );
+        await _groupRepository.UpdateAsync(group);
         return ObjectMapper.Map<Group, GroupDto>(group);
     }
 
     // setting the group as mark as delete
     public async Task<GroupDto> DeleteAsync(Guid id)
     {
-        var group = await _groupRepository.GetAsync(id);
+        var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
+        if (group == null)
+        {
+            throw new UserFriendlyException("Group is not found with this group id");
+        }
         group.IsDeleted = true;
         await _groupRepository.UpdateAsync(group);
         return ObjectMapper.Map<Group, GroupDto>(group);
