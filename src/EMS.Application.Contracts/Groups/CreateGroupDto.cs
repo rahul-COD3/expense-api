@@ -7,14 +7,12 @@ namespace EMS.Groups
 {
     public class CreateGroupDto
     {
-        [Required]  
+        [Required]
+        [RegularExpression(GroupConsts.GroupNameRegex, ErrorMessage = GroupConsts.GroupNameRegexErrorMessage)]
         public string Name { get; set; }
 
         public string About { get; set; }
-        [Required]
-        public Guid CreatedBy { get; set; }
-        public bool IsDeleted { get; set; }
 
-        public List<GroupMemberDto>? GroupMembers { get; set; }
+        public List<CreateGroupMembersDto>? GroupMembers { get; set; }
     }
 }
