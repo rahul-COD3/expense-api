@@ -59,11 +59,48 @@ namespace EMS.Payments
                 paymentReturn.Amount = payment.Amount;
                 paymentReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].group_id].Name;
                 paymentReturn.WhomeToGive = expenseDict[payment.ExpenseId].paid_by;
+                paymentReturn.Message = "You owes from";
                 paymentReturns.Add(paymentReturn);
             }
 
             return paymentReturns;
         }
+        public async Task<List<PaymentYouGetDto>> GetWhoWillGiveToCurrentUserAsync()
+        {
+            List<PaymentYouGetDto> paymentYouGetReturns = new List<PaymentYouGetDto>();
+            var currentUserId = _currentUser.Id;
+
+            var expenses = await _expenseRepository.GetListAsync(p => p.paid_by == currentUserId);
+            var expenseIds = expenses.Select(p => p.Id).Distinct().ToList();
+            var groupId = expenses.Select(p => p.group_id).Distinct().ToList();
+            var groups = await _groupRepository.GetListAsync(g => groupId.Contains(g.Id));
+
+            var expenseDict = expenses.ToDictionary(e => e.Id);
+            var groupDict = groups.ToDictionary(g => g.Id);
+
+
+            if (expenses.Count == 0)
+            {
+                PaymentYouGetDto paymentReturn = new PaymentYouGetDto();
+                paymentReturn.Message = "No one owes you";
+                paymentYouGetReturns.Add(paymentReturn);
+                return paymentYouGetReturns;
+            }
+            var payments = await _paymentRepository.GetListAsync(p => expenseIds.Contains(p.ExpenseId) && p.OwnedBy != currentUserId);
+
+            foreach (var payment in payments)
+            {
+                PaymentYouGetDto paymentYouGetReturn = new PaymentYouGetDto();
+                paymentYouGetReturn.OwesFromYou = payment.OwnedBy;
+                paymentYouGetReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].group_id].Name;
+                paymentYouGetReturn.Message = "Owes from you";
+                paymentYouGetReturns.Add(paymentYouGetReturn);
+            }
+
+            return paymentYouGetReturns;
+        }
+
+
 
 
     }
