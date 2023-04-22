@@ -68,7 +68,7 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
         return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
 
-    public async Task UpdateAsync(Guid id, UpdateGroupMemberDto input)
+    public async Task<GroupMemberDto> UpdateAsync(Guid id, UpdateGroupMemberDto input)
     {
         var groupMember = await _groupMemberRepository.GetAsync(id);
 
@@ -78,12 +78,14 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
         groupMember.dateOfJoin = input.dateOfJoin;
 
         await _groupMemberRepository.UpdateAsync(groupMember);
+        return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
-    public async Task DeleteAsync(Guid id)
+    public async Task<GroupMemberDto> DeleteAsync(Guid id)
     {
         var groupMember = await _groupMemberRepository.GetAsync(id);
-        groupMember.isRemoved = false;
+        groupMember.isRemoved = true;
         await _groupMemberRepository.UpdateAsync(groupMember);
+        return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
     
 }
