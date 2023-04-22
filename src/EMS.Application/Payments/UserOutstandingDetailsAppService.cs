@@ -92,6 +92,7 @@ namespace EMS.Payments
             {
                 PaymentYouGetDto paymentYouGetReturn = new PaymentYouGetDto();
                 paymentYouGetReturn.OwesFromYou = payment.OwnedBy;
+                paymentYouGetReturn.Amount = payment.Amount;
                 paymentYouGetReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].group_id].Name;
                 paymentYouGetReturn.Message = "Owes from you";
                 paymentYouGetReturns.Add(paymentYouGetReturn);
