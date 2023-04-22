@@ -35,25 +35,7 @@ namespace EMS.Payments
             _expenseRepository = expenseRepository;
             _paymentRepository = paymentRepository;
         }
-        //public override async Task<string> UpdateAsync(Guid id, CreateUpdatePaymentDto input)
-        //{
-        //    var payment = await Repository.GetAsync(id);
-
-        //    // Update the payment entity with the input values
-        //    ObjectMapper.Map(input, payment);
-
-        //    // Check if the payment has been settled
-        //    if (payment.IsSettled)
-        //    {
-        //        // If it has, return the string "Payment Settled" in the API response
-        //        return "Payment Settled";
-        //    }
-
-        //    await Repository.UpdateAsync(payment);
-
-        //    // If the payment has not been settled, return an empty string in the API response
-        //    return "";
-        //}
+        
 
         [HttpGet]
         [Route("api/payments/list")]
