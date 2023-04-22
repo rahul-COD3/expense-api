@@ -59,8 +59,8 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
         var groupMember = await _groupMemberManager.CreateAsync(
             input.userId,
             input.groupId,
-            input.isRemoved,
-            input.dateOfJoin
+            false,
+            DateTime.Now
         );
 
         await _groupMemberRepository.InsertAsync(groupMember);
