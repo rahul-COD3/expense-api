@@ -9,10 +9,4 @@ public class CreateGroupMemberDto
     public Guid userId { get; set; }
     [Required]
     public Guid groupId { get; set; }
-
-    [Required]
-    public bool isRemoved { get; set; } = false;
-
-    [Required]
-    public DateTime dateOfJoin { get; set; } = DateTime.Now;
 }
