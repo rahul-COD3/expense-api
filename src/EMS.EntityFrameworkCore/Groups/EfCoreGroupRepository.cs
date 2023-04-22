@@ -22,7 +22,7 @@ namespace EMS.Groups
         public async Task<Group> FindByNameAsync(string name)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet.FirstOrDefaultAsync(group => group.Name == name);
+            return await dbSet.FirstOrDefaultAsync(group => group.Name == name && !group.IsDeleted);
         }
 
         public async Task<List<Group>> FindGroupsByUserIdAsync(Guid userId)
@@ -54,11 +54,12 @@ namespace EMS.Groups
                     !filter.IsNullOrWhiteSpace(),
                     group => group.Name.Contains(filter)
                 )
+                .Where(group => !group.IsDeleted) // add this condition to filter out deleted groups
                 .OrderBy(sorting)
                 .Skip(skipCount)
                 .Take(maxResultCount)
                 .ToListAsync();
         }
-       
+
     }
 }

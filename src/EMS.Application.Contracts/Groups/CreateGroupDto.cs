@@ -11,8 +11,8 @@ namespace EMS.Groups
         [RegularExpression(GroupConsts.GroupNameRegex, ErrorMessage = GroupConsts.GroupNameRegexErrorMessage)]
         public string Name { get; set; }
 
-        public string? About { get; set; }
+        public string About { get; set; }
 
-        public List<CreateGroupMemberDto>? GroupMembers { get; set; }
+        public List<CreateGroupMembersDto>? GroupMembers { get; set; }
     }
 }
