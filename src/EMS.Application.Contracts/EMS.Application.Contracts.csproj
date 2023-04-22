@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Settle\**" />
+    <EmbeddedResource Remove="Settle\**" />
+    <None Remove="Settle\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EMS.Domain.Shared\EMS.Domain.Shared.csproj" />
   </ItemGroup>
 
@@ -21,10 +27,6 @@
     <PackageReference Include="Volo.Abp.TenantManagement.Application.Contracts" Version="7.1.1" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Application.Contracts" Version="7.1.1" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application.Contracts" Version="7.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Settle\" />
   </ItemGroup>
 
 </Project>

@@ -22,13 +22,13 @@ namespace EMS.GroupMembers
         public async Task<List<GroupMember>> FindByGroupIdAsync(Guid groupId)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet.Where(groupMember => groupMember.groupId == groupId).ToListAsync();
+            return await dbSet.Where(groupMember => groupMember.groupId == groupId && !groupMember.isRemoved).ToListAsync();
         }
 
         public async Task<List<GroupMember>> GetListAsync(int skipCount, int maxResultCount, string sorting, string filter = null)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet
+            return await dbSet.Where(group => !group.isRemoved)
                 .OrderBy(sorting)
                 .Skip(skipCount)
                 .Take(maxResultCount)
