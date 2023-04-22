@@ -31,6 +31,7 @@ namespace EMS.Payments
         public async Task<List<PaymentReturnDto>> GetPaymentInfoForCurrentUserAsync()
         {
             List<PaymentReturnDto> paymentReturns = new List<PaymentReturnDto>();
+
             var currentUserId = _currentUser.Id;
 
             var payments = await _paymentRepository.GetListAsync(p => p.OwnedBy == currentUserId);
@@ -42,24 +43,26 @@ namespace EMS.Payments
                 paymentReturns.Add(paymentReturn);
                 return paymentReturns;
             }
-            else
+
+            var expenseIds = payments.Select(p => p.ExpenseId).Distinct().ToList();
+            var expenses = await _expenseRepository.GetListAsync(e => expenseIds.Contains(e.Id));
+
+            var groupIds = expenses.Select(e => e.group_id).Distinct().ToList();
+            var groups = await _groupRepository.GetListAsync(g => groupIds.Contains(g.Id));
+
+            var expenseDict = expenses.ToDictionary(e => e.Id);
+            var groupDict = groups.ToDictionary(g => g.Id);
+
+            foreach (var payment in payments)
             {
-                foreach (var payment in payments)
-                {
-                    var expense = await _expenseRepository.GetAsync(payment.ExpenseId);
-
-                    var group = await _groupRepository.GetAsync(expense.group_id);
-
-                    PaymentReturnDto paymentReturn = new PaymentReturnDto();
-                    paymentReturn.Amount = payment.Amount;
-                    paymentReturn.GroupName = group.Name;
-                    paymentReturn.WhomeToGive = expense.paid_by;
-
-                    paymentReturns.Add(paymentReturn);
-                }
-
-                return paymentReturns;
+                PaymentReturnDto paymentReturn = new PaymentReturnDto();
+                paymentReturn.Amount = payment.Amount;
+                paymentReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].group_id].Name;
+                paymentReturn.WhomeToGive = expenseDict[payment.ExpenseId].paid_by;
+                paymentReturns.Add(paymentReturn);
             }
+
+            return paymentReturns;
         }
 
 
