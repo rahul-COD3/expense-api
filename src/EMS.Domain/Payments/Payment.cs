@@ -9,6 +9,7 @@ namespace EMS.Payments
 {
     public class Payment: AuditedAggregateRoot<Guid>
     {
+        
         public Guid OwnedBy { get; set; }
 
         public Guid ExpenseId { get; set; }

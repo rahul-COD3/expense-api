@@ -16,55 +16,47 @@ using Volo.Abp.Users;
 
 namespace EMS.Payments
 {
-    public class PaymentAppService :
-    CrudAppService<
-        Payment, 
-        PaymentDto, 
-        Guid, 
-        PagedAndSortedResultRequestDto, 
-        CreateUpdatePaymentDto>, 
-    IPaymentAppService 
+    public class PaymentAppService : ApplicationService, IPaymentAppService
     {
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<Expense, Guid> _expenseRepository;
         private readonly IRepository<Payment, Guid> _paymentRepository;
         public PaymentAppService(IRepository<Payment, Guid> repository, ICurrentUser currentUser, IRepository<Expense, Guid> expenseRepository, IRepository<Payment, Guid> paymentRepository)
-            : base(repository)
+            : base()
         {
             _currentUser = currentUser;
             _expenseRepository = expenseRepository;
             _paymentRepository = paymentRepository;
         }
-        //public override async Task<string> UpdateAsync(Guid id, CreateUpdatePaymentDto input)
-        //{
-        //    var payment = await Repository.GetAsync(id);
 
-        //    // Update the payment entity with the input values
-        //    ObjectMapper.Map(input, payment);
+        
+        public async Task<Payment> UpdatePaymentAsync(Guid Id)
+        {
+            var pay1 = await _paymentRepository.FirstOrDefaultAsync(p => p.Id == Id);
+            if (pay1 == null)
+            {
+                throw new UserFriendlyException("Payment not found");
+                
+            }
+            if (pay1.IsSettled)
+            {
+                throw new UserFriendlyException("Payment Already Settled");
+            }
+            pay1.IsSettled = true;
+            return pay1;
+        }
 
-        //    // Check if the payment has been settled
-        //    if (payment.IsSettled)
-        //    {
-        //        // If it has, return the string "Payment Settled" in the API response
-        //        return "Payment Settled";
-        //    }
-
-        //    await Repository.UpdateAsync(payment);
-
-        //    // If the payment has not been settled, return an empty string in the API response
-        //    return "";
-        //}
 
         [HttpGet]
         [Route("api/payments/list")]
         [Authorize]
         public async Task<List<PaymentDto>> GetSettledPaymentsofCurrentUserAsync() // returns the list of payment for the current user
         {
-            var check1 = await _paymentRepository.FirstOrDefaultAsync();
-            var check2 = await _expenseRepository.GetAsync(check1.ExpenseId);
+            var pay1 = await _paymentRepository.FirstOrDefaultAsync();
+            var pay2 = await _expenseRepository.GetAsync(pay1.ExpenseId);
 
 
-            var payments = await Repository.GetListAsync(p => p.IsSettled && p.OwnedBy == CurrentUser.Id || check2.paid_by == CurrentUser.Id);
+            var payments = await _paymentRepository.GetListAsync(p => p.IsSettled && p.OwnedBy == CurrentUser.Id || pay2.paid_by == CurrentUser.Id);
             
             if(payments.Count == 0)
             {
