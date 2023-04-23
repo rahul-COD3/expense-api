@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 
@@ -23,7 +24,7 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
 
     public async Task<GroupMemberDto> GetAsync(Guid id)
     {
-        var groupMember = await _groupMemberRepository.GetAsync(id);
+        var groupMember = await _groupMemberRepository.FirstOrDefaultAsync(gm => gm.Id == id);
         return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
     public async Task<List<GroupMemberDto>> GetGroupMembersAsync(Guid groupId)
@@ -70,7 +71,11 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
 
     public async Task<GroupMemberDto> UpdateAsync(Guid id, UpdateGroupMemberDto input)
     {
-        var groupMember = await _groupMemberRepository.GetAsync(id);
+        var groupMember = await _groupMemberRepository.FirstOrDefaultAsync(gm => gm.Id == id);
+        if (groupMember == null)
+        {
+            throw new UserFriendlyException("Group member is not found with this id");
+        }
 
         groupMember.userId = input.userId;
         groupMember.groupId = input.groupId;
@@ -82,10 +87,14 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
     }
     public async Task<GroupMemberDto> DeleteAsync(Guid id)
     {
-        var groupMember = await _groupMemberRepository.GetAsync(id);
+        var groupMember = await _groupMemberRepository.FirstOrDefaultAsync(gm => gm.Id == id);
+        if (groupMember == null)
+        {
+            throw new UserFriendlyException("Group member is not found with this group member id");
+        }
         groupMember.isRemoved = true;
         await _groupMemberRepository.UpdateAsync(groupMember);
         return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
-    
+
 }

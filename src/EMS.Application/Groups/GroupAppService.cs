@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EMS.GroupMembers;
 using Microsoft.AspNetCore.Authorization;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
@@ -25,12 +26,12 @@ public class GroupAppService : EMSAppService, IGroupAppService
     private readonly ICurrentUser _currentUser;
 
     public GroupAppService(
-        IGroupRepository groupRepository, 
-        GroupManager groupManager, 
-        IGroupMemberRepository groupMemberRepository, 
+        IGroupRepository groupRepository,
+        GroupManager groupManager,
+        IGroupMemberRepository groupMemberRepository,
         GroupMemberManager groupMemberManager,
         ICurrentUser currentUser
-        )  
+        )
     {
         _groupRepository = groupRepository;
         _groupManager = groupManager;
@@ -41,7 +42,7 @@ public class GroupAppService : EMSAppService, IGroupAppService
     // getting group by groupId
     public async Task<GroupDto> GetAsync(Guid id)
     {
-        var group = await _groupRepository.GetAsync(id);
+        var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
         var groupMembers = await _groupMemberRepository.FindByGroupIdAsync(id);
         var groupDto = ObjectMapper.Map<Group, GroupDto>(group);
         groupDto.GroupMembers = ObjectMapper.Map<List<GroupMember>, List<GroupMemberDto>>(groupMembers);
@@ -82,11 +83,14 @@ public class GroupAppService : EMSAppService, IGroupAppService
     }
     public async Task<GroupDto> CreateAsync(CreateGroupDto input)
     {
+
+        var currentUserId = (Guid)_currentUser.Id;
+
         // Create the group with the given input parameters
         var group = await _groupManager.CreateAsync(
             input.Name,
             input.About,
-            (Guid)_currentUser.Id,
+            currentUserId,
             false
         );
 
@@ -94,7 +98,7 @@ public class GroupAppService : EMSAppService, IGroupAppService
 
         // Create a task for adding the current user as a member
         var currentMember = _groupMemberManager.CreateAsync(
-            (Guid)_currentUser.Id,
+            currentUserId,
             group.Id,
             false,
             DateTime.Now
@@ -104,7 +108,9 @@ public class GroupAppService : EMSAppService, IGroupAppService
         var groupMembers = new List<Task<GroupMember>>();
         if (input.GroupMembers != null)
         {
-            groupMembers = input.GroupMembers.Select(groupMember =>
+            groupMembers = input.GroupMembers
+            .Where(groupMember => groupMember.userId != currentUserId) // Check if current user ID is already in the list
+            .Select(groupMember =>
                 _groupMemberManager.CreateAsync(
                     groupMember.userId,
                     group.Id,
@@ -131,22 +137,30 @@ public class GroupAppService : EMSAppService, IGroupAppService
     // updating the the group by perticular group id
     public async Task<GroupDto> UpdateAsync(Guid id, UpdateGroupDto input)
     {
-        var group = await _groupRepository.GetAsync( id );
-        if (group.Name!=input.Name)
+        var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
+        if (group == null)
+        {
+            throw new UserFriendlyException("Group is not found with this group id");
+        }
+        if (group.Name != input.Name)
         {
             await _groupManager.ChangeNameAsync(group, input.Name);
         }
         group.About = input.About;
         group.CreatedBy = input.CreatedBy;
         group.IsDeleted = input.IsDeleted;
-        await _groupRepository.UpdateAsync( group );
+        await _groupRepository.UpdateAsync(group);
         return ObjectMapper.Map<Group, GroupDto>(group);
     }
 
     // setting the group as mark as delete
     public async Task<GroupDto> DeleteAsync(Guid id)
     {
-        var group = await _groupRepository.GetAsync(id);
+        var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
+        if (group == null)
+        {
+            throw new UserFriendlyException("Group is not found with this group id");
+        }
         group.IsDeleted = true;
         await _groupRepository.UpdateAsync(group);
         return ObjectMapper.Map<Group, GroupDto>(group);
