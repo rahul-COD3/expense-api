@@ -25,10 +25,6 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
     public async Task<GroupMemberDto> GetAsync(Guid id)
     {
         var groupMember = await _groupMemberRepository.FirstOrDefaultAsync(gm => gm.Id == id);
-        if (groupMember == null)
-        {
-            throw new UserFriendlyException("Group member is not found with this id");
-        }
         return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
     public async Task<List<GroupMemberDto>> GetGroupMembersAsync(Guid groupId)

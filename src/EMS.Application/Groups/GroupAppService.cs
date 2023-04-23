@@ -43,10 +43,6 @@ public class GroupAppService : EMSAppService, IGroupAppService
     public async Task<GroupDto> GetAsync(Guid id)
     {
         var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
-        if (group == null)
-        {
-            throw new UserFriendlyException("Group is not found with this group id");
-        }
         var groupMembers = await _groupMemberRepository.FindByGroupIdAsync(id);
         var groupDto = ObjectMapper.Map<Group, GroupDto>(group);
         groupDto.GroupMembers = ObjectMapper.Map<List<GroupMember>, List<GroupMemberDto>>(groupMembers);
@@ -87,11 +83,14 @@ public class GroupAppService : EMSAppService, IGroupAppService
     }
     public async Task<GroupDto> CreateAsync(CreateGroupDto input)
     {
+
+        var currentUserId = (Guid)_currentUser.Id;
+
         // Create the group with the given input parameters
         var group = await _groupManager.CreateAsync(
             input.Name,
             input.About,
-            (Guid)_currentUser.Id,
+            currentUserId,
             false
         );
 
@@ -99,7 +98,7 @@ public class GroupAppService : EMSAppService, IGroupAppService
 
         // Create a task for adding the current user as a member
         var currentMember = _groupMemberManager.CreateAsync(
-            (Guid)_currentUser.Id,
+            currentUserId,
             group.Id,
             false,
             DateTime.Now
@@ -109,7 +108,9 @@ public class GroupAppService : EMSAppService, IGroupAppService
         var groupMembers = new List<Task<GroupMember>>();
         if (input.GroupMembers != null)
         {
-            groupMembers = input.GroupMembers.Select(groupMember =>
+            groupMembers = input.GroupMembers
+            .Where(groupMember => groupMember.userId != currentUserId) // Check if current user ID is already in the list
+            .Select(groupMember =>
                 _groupMemberManager.CreateAsync(
                     groupMember.userId,
                     group.Id,
