@@ -29,7 +29,7 @@ namespace EMS.Payments
             _paymentRepository = paymentRepository;
         }
 
-        
+        [Route("api/Payment/settle")]
         public async Task<Payment> UpdatePaymentAsync(Guid Id)
         {
             var pay1 = await _paymentRepository.FirstOrDefaultAsync(p => p.Id == Id);
