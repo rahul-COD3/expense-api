@@ -34,7 +34,7 @@ namespace EMS.Payments
 
             var currentUserId = _currentUser.Id;
 
-            var payments = await _paymentRepository.GetListAsync(p => p.OwnedBy == currentUserId);
+            var payments = await _paymentRepository.GetListAsync(p => p.OwnedBy == currentUserId && p.IsSettled == false);
 
             if (payments.Count == 0)
             {
@@ -86,7 +86,15 @@ namespace EMS.Payments
                 paymentYouGetReturns.Add(paymentReturn);
                 return paymentYouGetReturns;
             }
-            var payments = await _paymentRepository.GetListAsync(p => expenseIds.Contains(p.ExpenseId) && p.OwnedBy != currentUserId);
+            var payments = await _paymentRepository.GetListAsync(p => expenseIds.Contains(p.ExpenseId) && p.OwnedBy != currentUserId && p.IsSettled == false);
+
+            if (payments.Count == 0)
+            {
+                PaymentYouGetDto paymentYouGetReturn = new PaymentYouGetDto();
+                paymentYouGetReturn.Message = "All payment clear";
+                paymentYouGetReturns.Add(paymentYouGetReturn);
+                return paymentYouGetReturns;
+            }
 
             foreach (var payment in payments)
             {
