@@ -40,7 +40,7 @@ namespace EMS.Expenses
             var expense = ObjectMapper.Map<CreateUpdateExpenseDto, Expense>(input);
 
             // retrieve associated group members
-            var groupMembers = await _groupMemberRepository.GetListAsync(gm => gm.groupId == input.group_id);
+            var groupMembers = await _groupMemberRepository.GetListAsync(gm => gm.groupId == input.groupId);
 
             //var groupMembers = await _groupMemberRepository.FindByGroupIdAsync(groupId);
             await Repository.InsertAsync(expense);
@@ -48,7 +48,7 @@ namespace EMS.Expenses
             // calculate the amount per group member
             var amountPerMember = expense.expense_amount / groupMembers.Count;
 
-            var abc = groupMembers.RemoveAll(gm => gm.userId == expense.paid_by);
+            var abc = groupMembers.RemoveAll(gm => gm.userId == expense.paidBy);
 
             // create a new payment entity for each group member
             foreach (var groupMember in groupMembers)

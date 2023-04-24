@@ -47,7 +47,7 @@ namespace EMS.Payments
             var expenseIds = payments.Select(p => p.ExpenseId).Distinct().ToList();
             var expenses = await _expenseRepository.GetListAsync(e => expenseIds.Contains(e.Id));
 
-            var groupIds = expenses.Select(e => e.group_id).Distinct().ToList();
+            var groupIds = expenses.Select(e => e.groupId).Distinct().ToList();
             var groups = await _groupRepository.GetListAsync(g => groupIds.Contains(g.Id));
 
             var expenseDict = expenses.ToDictionary(e => e.Id);
@@ -57,8 +57,8 @@ namespace EMS.Payments
             {
                 PaymentReturnDto paymentReturn = new PaymentReturnDto();
                 paymentReturn.Amount = payment.Amount;
-                paymentReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].group_id].Name;
-                paymentReturn.WhomeToGive = expenseDict[payment.ExpenseId].paid_by;
+                paymentReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].groupId].Name;
+                paymentReturn.WhomeToGive = expenseDict[payment.ExpenseId].groupId;
                 paymentReturn.Message = "You owes from";
                 paymentReturns.Add(paymentReturn);
             }
@@ -70,9 +70,9 @@ namespace EMS.Payments
             List<PaymentYouGetDto> paymentYouGetReturns = new List<PaymentYouGetDto>();
             var currentUserId = _currentUser.Id;
 
-            var expenses = await _expenseRepository.GetListAsync(p => p.paid_by == currentUserId);
+            var expenses = await _expenseRepository.GetListAsync(p => p.paidBy == currentUserId);
             var expenseIds = expenses.Select(p => p.Id).Distinct().ToList();
-            var groupId = expenses.Select(p => p.group_id).Distinct().ToList();
+            var groupId = expenses.Select(p => p.groupId).Distinct().ToList();
             var groups = await _groupRepository.GetListAsync(g => groupId.Contains(g.Id));
 
             var expenseDict = expenses.ToDictionary(e => e.Id);
@@ -93,7 +93,7 @@ namespace EMS.Payments
                 PaymentYouGetDto paymentYouGetReturn = new PaymentYouGetDto();
                 paymentYouGetReturn.OwesFromYou = payment.OwnedBy;
                 paymentYouGetReturn.Amount = payment.Amount;
-                paymentYouGetReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].group_id].Name;
+                paymentYouGetReturn.GroupName = groupDict[expenseDict[payment.ExpenseId].groupId].Name;
                 paymentYouGetReturn.Message = "Owes from you";
                 paymentYouGetReturns.Add(paymentYouGetReturn);
             }
