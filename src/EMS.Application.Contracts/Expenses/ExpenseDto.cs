@@ -10,7 +10,7 @@ namespace EMS.Expenses
     {
         public Guid groupId { get; set; }
 
-        public Guid paidBy { get; set; }
+        public Guid? paidBy { get; set; }
         public string expense_title { get; set; }
         public string expense_description { get; set; }
         public decimal expense_amount { get; set; }
