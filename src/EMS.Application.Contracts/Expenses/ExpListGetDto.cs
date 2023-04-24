@@ -11,6 +11,6 @@ namespace EMS.Expenses
         public Guid ?OwnedBy { get; set; }
         public decimal? Amount { get; set; }
         public string? Message { get; set; }
-       // public decimal YouLentBorrow { get; set; }
+      
     }
 }
