@@ -8,9 +8,9 @@ namespace EMS.Expenses
 {
     public class ExpenseDto : AuditedEntityDto<Guid>
     {
-        public Guid group_id { get; set; }
+        public Guid groupId { get; set; }
 
-        public Guid paid_by { get; set; }
+        public Guid paidBy { get; set; }
         public string expense_title { get; set; }
         public string expense_description { get; set; }
         public decimal expense_amount { get; set; }
@@ -19,9 +19,8 @@ namespace EMS.Expenses
 
         public string currency { get; set; }
 
-        public DateTime created_at { get; set; }
-        public DateTime modified_at { get; set; }
-        public DateTime deleted_at { get; set; }
+        public bool IsSettled { get; set; }
+
         public GroupDto? groupDto { get; set; }
     }
 }

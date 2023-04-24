@@ -92,7 +92,16 @@ public class EMSDbContext :
             b.ToTable(EMSConsts.DbTablePrefix + "Expenses",
                EMSConsts.DbSchema);
             b.ConfigureByConvention(); 
-            b.Property(x => x.expense_title).IsRequired().HasMaxLength(128);
+            b.Property(x => x.expense_title).IsRequired();
+            b.HasOne<IdentityUser>()
+              .WithMany()
+              .HasForeignKey(gm => gm.paidBy)
+              .IsRequired();
+            b.HasOne<Group>()
+            .WithMany()
+            .HasForeignKey(g => g.groupId)
+            .IsRequired();
+
         });
 
         builder.Entity<GroupMember>(b =>
