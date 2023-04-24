@@ -32,7 +32,7 @@ namespace EMS.Users
                     paidBy = expense.paidBy,
                     expense_amount = expense.expense_amount,
                     groupId = expense.groupId
-                    //YouLentBorrow = expense.expense_amount,
+                    
                 };
                 expenseDto.Add(expDto);
 
@@ -48,7 +48,7 @@ namespace EMS.Users
             if(payments.Count == 0)
             {
                 ExpListGetDto expListGetDtos = new ExpListGetDto();
-                expListGetDtos.Message = "Nothing to show";
+                expListGetDtos.Message = "You do not have any expenses yet";
                 expenseList.Add(expListGetDtos);
                 return expenseList;
             }
@@ -60,7 +60,7 @@ namespace EMS.Users
                     PaymentId = payment.Id,
                     OwnedBy = payment.OwnedBy,
                     Amount = payment.Amount,
-                    //YouLentBorrow = expense.expense_amount,
+                    
                 };
                 expenseList.Add(expListGetDto);
 
