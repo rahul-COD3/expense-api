@@ -56,7 +56,7 @@ namespace EMS.Payments
             var pay2 = await _expenseRepository.GetAsync(pay1.ExpenseId);
 
 
-            var payments = await _paymentRepository.GetListAsync(p => p.IsSettled && p.OwnedBy == CurrentUser.Id || pay2.paid_by == CurrentUser.Id);
+            var payments = await _paymentRepository.GetListAsync(p => p.IsSettled && p.OwnedBy == CurrentUser.Id || pay2.paidBy == CurrentUser.Id);
             
             if(payments.Count == 0)
             {
