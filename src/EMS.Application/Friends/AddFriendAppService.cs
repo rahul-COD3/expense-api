@@ -104,7 +104,7 @@ namespace EMS.Friends
             {
                 smtpClient.Port = 587;
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new System.Net.NetworkCredential("test1403email@gmail.com", "fohmxxrccvyyzcsl");
+                smtpClient.Credentials = new System.Net.NetworkCredential("test1403email@gmail.com", "honxqgcfvhfksxfo");
                 smtpClient.EnableSsl = true;
 
                 await smtpClient.SendMailAsync(mailMessage);
