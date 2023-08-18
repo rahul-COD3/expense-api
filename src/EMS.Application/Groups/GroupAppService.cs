@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EMS.GroupMembers;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace EMS.Groups;
@@ -39,7 +33,12 @@ public class GroupAppService : EMSAppService, IGroupAppService
         _groupMemberManager = groupMemberManager;
         _currentUser = currentUser;
     }
-    // getting group by groupId
+    
+    /// <summary>
+    /// Get the group by group id
+    /// </summary>
+    /// <param name="id">The Id of the group</param>
+    /// <returns></returns>
     public async Task<GroupDto> GetAsync(Guid id)
     {
         var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
@@ -50,9 +49,13 @@ public class GroupAppService : EMSAppService, IGroupAppService
         return groupDto;
     }
 
-    // getting list of group by userId
-    public async Task<List<GroupDto>> GetGroupsBelongingToUserAsync(Guid userId)
+    /// <summary>
+    /// This method returns all the groups that the user is a member of (including groups that the user created)
+    /// </summary>
+    /// <returns>Returns the all the groups that the user is a member</returns>
+    public async Task<List<GroupDto>> GetGroupsBelongingToUserAsync()
     {
+        var userId = (Guid)_currentUser.Id!;
         var groups = await _groupRepository.FindGroupsByUserIdAsync(userId);
         return ObjectMapper.Map<List<Group>, List<GroupDto>>(groups);
     }
@@ -68,7 +71,7 @@ public class GroupAppService : EMSAppService, IGroupAppService
             input.SkipCount,
             input.MaxResultCount,
             input.Sorting,
-            input.Filter
+            input.Filter!
         );
 
         var totalCount = input.Filter == null
@@ -84,7 +87,7 @@ public class GroupAppService : EMSAppService, IGroupAppService
     public async Task<GroupDto> CreateAsync(CreateGroupDto input)
     {
 
-        var currentUserId = (Guid)_currentUser.Id;
+        var currentUserId = (Guid)_currentUser.Id!;
 
         // Create the group with the given input parameters
         var group = await _groupManager.CreateAsync(

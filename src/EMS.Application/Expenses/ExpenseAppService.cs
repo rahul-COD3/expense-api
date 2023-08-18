@@ -1,26 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using EMS.GroupMembers;
 using EMS.Payments;
-using Volo.Abp.Guids;
 
 namespace EMS.Expenses
 {
-    public class ExpenseAppService :
-        CrudAppService<
-        Expense, //The Book entity
-        ExpenseDto, //Used to show books
-        Guid, //Primary key of the book entity
-        PagedAndSortedResultRequestDto, //Used for paging/sorting
-        CreateUpdateExpenseDto>, //Used to create/update a book
-    IExpenseAppService //implement the IBookAppService
+    public class ExpenseAppService : CrudAppService<Expense, ExpenseDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateExpenseDto>, IExpenseAppService
     {
         private readonly IRepository<GroupMember, Guid> _groupMemberRepository;
         private readonly IRepository<Payment, Guid> _paymentRepository;
@@ -31,7 +19,6 @@ namespace EMS.Expenses
         {
             _groupMemberRepository = groupMemberRepository;
             _paymentRepository = paymentRepository;
-
 
         }
 

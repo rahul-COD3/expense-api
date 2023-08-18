@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -96,5 +94,4 @@ public class GroupMemberAppService : EMSAppService, IGroupMemberAppService
         await _groupMemberRepository.UpdateAsync(groupMember);
         return ObjectMapper.Map<GroupMember, GroupMemberDto>(groupMember);
     }
-
 }

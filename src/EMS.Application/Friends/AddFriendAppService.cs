@@ -1,23 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Net.Mail;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Identity;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
 using Volo.Abp.Identity;
-using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
-using static Volo.Abp.Identity.Settings.IdentitySettingNames;
-using static Volo.Abp.UI.Navigation.DefaultMenuNames.Application;
 
 namespace EMS.Friends
 {

@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.ObjectMapping;
 
 namespace EMS.Friends
 {
@@ -36,7 +32,7 @@ namespace EMS.Friends
 
                 var friend = new Friend
                 {
-                    UserId = (Guid)input.UserId,
+                    UserId = (Guid)input.UserId!,
                     FriendId = input.FriendId,
                     IsDeleted = input.IsDeleted
                 };

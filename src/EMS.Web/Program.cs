@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -35,31 +33,24 @@ namespace EMS.Web
             .UseAutofac()
             .UseSerilog();
 
-
-
             // Add CORS policies
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("https://localhost:4200", "http://localhost:4200")
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .AllowCredentials();
                 });
             });
-
-
+ 
 
             await builder.AddApplicationAsync<EMSWebModule>();
             var app = builder.Build();
-
-
-
+            
             // Use CORS policies
             app.UseCors("AllowAll");
-
-
-
             await app.InitializeApplicationAsync();
             await app.RunAsync();
             return 0;
@@ -70,7 +61,7 @@ namespace EMS.Web
             {
                 throw;
             }
-
+            
                 Log.Fatal(ex, "Host terminated unexpectedly!");
                 return 1;
             }
