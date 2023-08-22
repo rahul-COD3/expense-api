@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp;
-using Volo.Abp.Application.Services;
-using Volo.Abp.Clients;
+﻿using Volo.Abp.Application.Services;
 using Volo.Abp.Identity;
-using Volo.Abp.Users;
 
 namespace EMS.Users
 {
@@ -21,14 +13,22 @@ namespace EMS.Users
 
         public string GetCurrentUserName()
         {
-            var UserName = CurrentUser?.UserName;
-            if (UserName == null)
+            var userName = CurrentUser?.UserName;
+            if (userName == null)
             {
                 return "You Must login first";
             }
-            return UserName;
+            return userName;
+        }
+        
+        public bool IsUserLoggedIn()
+        {
+            var userName = CurrentUser?.UserName;
+            if (userName == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
-
-   
 }
