@@ -137,7 +137,7 @@ public class GroupAppService : EMSAppService, IGroupAppService
 
 
 
-    // updating the the group by perticular group id
+    // updating the the group by particular group id
     public async Task<GroupDto> UpdateAsync(Guid id, UpdateGroupDto input)
     {
         var group = await _groupRepository.FirstOrDefaultAsync(g => g.Id == id);
