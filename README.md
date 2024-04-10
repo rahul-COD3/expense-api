@@ -51,7 +51,7 @@ ABP.IO provides a command-line interface (CLI) tool, ABP CLI, to simplify projec
 ## **Step 3: Install Project Library**
 - Open your project in terminal and run ```abp install-libs```
 ## **Step 4: Update connection string of ```appsettings.json``` file:** 
-- Open the `.\src\EMS.HttpApi.Host` folder and change your private connection string file.
+- Open the `.\src\EMS.Web` folder and change your private connection string file.
 
 ## **Step 5: Run the Application**
 
@@ -60,7 +60,7 @@ ABP.IO provides a command-line interface (CLI) tool, ABP CLI, to simplify projec
 3. Execute the following command to run the application:
 
     ```
-    dotnet run --project src/EMS.HttpApi.Host
+    dotnet run --project src/EMS.Web
     ```
 
 4. Open your web browser and navigate to **`https://localhost:44341`** (default URL).
